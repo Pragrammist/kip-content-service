@@ -1,0 +1,174 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Web</name>
+    </assembly>
+    <members>
+        <member name="M:Web.Controllers.CensorController.Get(System.String)">
+            <summary>
+            Возвращает нензора по айди
+            </summary>
+            <param name="censorId">айди цензора</param>
+            <response code="200">Все хорошо. Возвратился объект цензора</response>
+            <response code="404">Не найден цензор</response>
+        </member>
+        <member name="M:Web.Controllers.CensorController.Get(System.UInt32,System.UInt32)">
+            <summary>
+            Возвращает коллекцию цензоров
+            </summary>
+            <param name="limit">максимальное количество за раз</param>
+            <param name="page">номер страницы</param>
+            <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
+        </member>
+        <member name="M:Web.Controllers.CensorController.Delete(System.String)">
+            <summary>
+            Удаляет цензора по айди
+            </summary>
+            <param name="censorId">айди цензора</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Не найден цензор</response>
+        </member>
+        <member name="M:Web.Controllers.CensorController.Create">
+             <summary>
+             Создает цензора
+             </summary>
+             <remarks>
+             Прмер запроса:
+            
+                 POST /censor
+                 {
+                    
+                 }
+            
+             </remarks>
+             <response code="200">Все хорошо. Операция была произведена успешно</response>
+             <response code="400">Не прошло валидацию</response>
+        </member>
+        <member name="M:Web.Controllers.CensorController.AddFilm(System.String,System.String,System.UInt32)">
+            <summary>
+            Добавляет фильм к цензору
+            </summary>
+            <param name="censorId">айди цензора</param>
+            <param name="filmdId">айди фильма</param>
+            <param name="place">порядок в топе</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="400">Не прошло валидацию</response>
+            <response code="404">Не нашел фильм или цензора</response>
+        </member>
+        <member name="M:Web.Controllers.CensorController.DeleteFilm(System.String,System.String)">
+            <summary>
+            Убирает фильзм у цензора
+            </summary>
+            <param name="censorId">айди цензора</param>
+            <param name="filmdId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="400">Не прошло валидацию</response>
+            <response code="404">Не нашел фильм или цензора</response>
+        </member>
+        <member name="M:Web.Controllers.CensorController.ChangeName(System.String,System.String)">
+            <summary>
+            Меняет имя цензора
+            </summary>
+            <param name="censorId">айди цензора</param>
+            <param name="name">новое имя</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Не нашел цензора</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.Get(System.String)">
+            <summary>
+            Возвращает персону по id.
+            </summary>
+            <param name="personId">айди персоны</param>
+            <response code="200">Все хорошо. Возвратился объект цензора</response>
+            <response code="404">Не найдена персона</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.Get(System.UInt32,System.UInt32)">
+            <summary>
+            Возвращает коллекцию персон
+            </summary>
+            <param name="limit">максимальное количество возвращаемых элементов</param>
+            <param name="page">номер страницы</param>
+            <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.Delete(System.String)">
+            <summary>
+            Удаляет персону по айди
+            </summary>
+            <param name="personId">айди персоны</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Не найден цензор</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.Create">
+             <summary>
+             Создает персону
+             </summary>
+             <remarks>
+             Прмер запроса:
+            
+                 POST /person
+                 {
+                    
+                 }
+            
+             </remarks>
+             <response code="200">Все хорошо. Операция была произведена успешно</response>
+             <response code="400">Не прошло валидацию</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.ChangeInfo">
+             <summary>
+             Меняет некоторую информацию персоны
+             </summary>
+             <remarks>
+             Прмер запроса:
+            
+                 POST /person
+                 {
+                    
+                 }
+            
+             </remarks>
+             <response code="200">Все хорошо. Операция была произведена успешно</response>
+             <response code="400">Не прошло валидацию</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.AddNomination(System.String,System.String)">
+            <summary>
+            Добавляет номинацию для персоны
+            </summary>
+            <param name="personId">айди персоны</param>
+            <param name="nomination">номинация</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="400">Не прошло валидацию</response>
+            <response code="404">Не нашел персону</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.DeleteNomination(System.String,System.String)">
+            <summary>
+            Убирает номинацию у персоны
+            </summary>
+            <param name="personId">айди персоны</param>
+            <param name="nomination">номинация</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="400">Не прошло валидацию</response>
+            <response code="404">Не нашел персону</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.AddFilm(System.String,System.String)">
+            <summary>
+            Добавляет фильм для персоны, в котором снимался
+            </summary>
+            <param name="personId">айди персоны</param>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="400">Не прошло валидацию</response>
+            <response code="404">Не нашел персону</response>
+        </member>
+        <member name="M:Web.Controllers.PersonController.DeleteFilm(System.String,System.String)">
+            <summary>
+            Убирает фильм у персоны, в котором принимал учавствие
+            </summary>
+            <param name="personId">айди персоны</param>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="400">Не прошло валидацию</response>
+            <response code="404">Не нашел персону</response>
+        </member>
+    </members>
+</doc>
