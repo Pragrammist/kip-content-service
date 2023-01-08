@@ -74,6 +74,347 @@
             <response code="200">Все хорошо. Операция была произведена успешно</response>
             <response code="404">Не нашел цензора</response>
         </member>
+        <member name="M:Web.Controllers.FilmController.Get(System.String)">
+            <summary>
+            Возвращает фильм по айди
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Возвратился объект цензора</response>
+            <response code="404">Не найден фильм</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.Get(System.UInt32,System.UInt32)">
+            <summary>
+            Возвращает коллекцию цензоров
+            </summary>
+            <param name="limit">максимальное количество за раз</param>
+            <param name="page">номер страницы</param>
+            <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.Delete(System.String)">
+            <summary>
+            Удаляет фильм по айди
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Не найден фильм</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.Create">
+             <summary>
+             Создает фильм
+             </summary>
+             <remarks>
+             Прмер запроса:
+            
+                 POST /person
+                 {
+                    
+                 }
+            
+             </remarks>
+             <response code="200">Все хорошо. Операция была произведена успешно</response>
+             <response code="400">Не прошло валидацию</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.ChangeInfo">
+             <summary>
+             Меняет некоторую информацию фильмы
+             </summary>
+             <remarks>
+             Прмер запроса:
+            
+                 PUT  /person
+                 {
+                    
+                 }
+            
+             </remarks>
+             <response code="200">Все хорошо. Операция была произведена успешно</response>
+             <response code="400">Не прошло валидацию</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.IncrNotInteresting(System.String)">
+            <summary>
+            Увеличивает счетчик "неинтересно" на 1 единицу.
+            Нет проверки на уникальность того, кто увеличивает это счетчик.
+            Поэтому метод не для админки
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DecrNotInteresting(System.String)">
+            <summary>
+            Уменьшает счетчик "неинтересно" на 1 единицу.
+            Нет проверки на уникальность того, кто уменьшает это счетчик.
+            Поэтому метод не для админки
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.IncrViewsCount(System.String)">
+            <summary>
+            Увеличивает счетчик "просмотра" на 1 единицу.
+            Нет проверки на уникальность того, кто уменьшает это счетчик.
+            Поэтому метод не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.IncrWillWatchCount(System.String)">
+            <summary>
+            Увеличивает счетчик "буду смотреть" на 1 единицу.
+            Нет проверки на уникальность того, кто уменьшает это счетчик.
+            Поэтому метод не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DecrWillWatchCount(System.String)">
+            <summary>
+            Уменьшает счетчик "буду смотреть" на 1 единицу.
+            Нет проверки на уникальность того, кто уменьшает это счетчик.
+            Поэтому метод не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.IncrShareCount(System.String)">
+            <summary>
+            Увеличивает счетчик "поделилось" на 1 единицу.
+            Не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.IncrWatchedCount(System.String)">
+            <summary>
+            Увеличивает счетчик "просмотренно" на 1 единицу.
+            Нет проверки на уникальность того, кто уменьшает это счетчик.
+            Поэтому метод не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DecrWatchedCount(System.String)">
+            <summary>
+            Уменьшает счетчик "просмотренно" на 1 единицу.
+            Нет проверки на уникальность того, кто уменьшает это счетчик.
+            Метод не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.Score(System.String,System.Double)">
+            <summary>
+            Записывает оценку пользователя, увеличивая счетчик количество оценок
+            Нет проверки на уникальность того, кто оцнивает
+            Метод не для админки.
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="score">оценка пользоваетля</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddImage(System.String,System.String)">
+            <summary>
+            Добавляет фотографию к фильму. Используется, чтобы показывать моменты из фильмов в фотографиях
+            Нет проверки на уникальность
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="image">айди фотографии</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteImage(System.String,System.String)">
+            <summary>
+            Убирает фотографию из фильма
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="image">айди фотографии</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddStuff(System.String,System.String)">
+            <summary>
+            Дабавляет участника к фильму(актер, режисер и пр.)
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="person">айди персоны</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteStuff(System.String,System.String)">
+            <summary>
+            Убирает участника из фильма
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="person">айди персоны</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddArticle(System.String,System.String)">
+            <summary>
+            Добавляет статью связанную с фильмом
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="article">ссылка на статью</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteArticle(System.String,System.String)">
+            <summary>
+            Удаляет статью связанную с фильмом
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="article">ссылка на статью</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddTrailers(System.String,System.String)">
+            <summary>
+            Добавляет трейлер связанный с фильмом
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="trailer">айди трейлера</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteTrailers(System.String,System.String)">
+            <summary>
+            Удаляет трейлер связанный с фильмом
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="trailer">айди трейлера</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddTizer(System.String,System.String)">
+            <summary>
+            Добавляет тизер к фильму
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="tizer">айди тизер</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteTizer(System.String,System.String)">
+            <summary>
+            Убирает тизер из фильма
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="tizer">айди тизер</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddRelatedFilm(System.String,System.String)">
+            <summary>
+            Добавляет связанный фильм к фильму
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="relateFilmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteRelatedFilm(System.String,System.String)">
+            <summary>
+            Удаляет связанный фильм
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="relateFilmId">айди фильма</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddNomination(System.String,System.String)">
+            <summary>
+            Добавляет номинацию к фильму
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="nomination">номинация</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteNomination(System.String,System.String)">
+            <summary>
+            Удаляет номинацию из фильма
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="nomination">номинация</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddSeason(System.String,System.UInt32,System.String)">
+            <summary>
+            Добавляет сезон
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="num">номер</param>
+            <param name="banner">банер</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteSeason(System.String,System.UInt32)">
+            <summary>
+            Удаляет сезон
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="num">номер</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddSeria(System.String,System.UInt32,System.String,System.UInt32)">
+            <summary>
+            Добавляет серию к сезону
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="num">номер</param>
+            <param name="file">айди файла</param>
+            <param name="season">номер</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteSeria(System.String,System.UInt32,System.UInt32)">
+            <summary>
+            Удаляет серию из сезона
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="num">номер</param>
+            <param name="season">номер</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddSeasonsAndSerias">
+            <summary>
+            Добавляет несколько сезонов с сериями сразу. 
+            </summary>
+            <remark>
+            
+            </remark>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>    
+        </member>
+        <member name="M:Web.Controllers.FilmController.AddGenre(System.String,System.String)">
+            <summary>
+            Добавляет жанр к фильму
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="genre">жанр</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
+        <member name="M:Web.Controllers.FilmController.DeleteGenre(System.String,System.String)">
+            <summary>
+            Удаляет жанр из фильма
+            </summary>
+            <param name="filmId">айди фильма</param>
+            <param name="genre">жанр</param>
+            <response code="200">Все хорошо. Операция была произведена успешно</response>
+            <response code="404">Айди не найдено</response>
+        </member>
         <member name="M:Web.Controllers.PersonController.Get(System.String)">
             <summary>
             Возвращает персону по id.
@@ -121,7 +462,7 @@
              <remarks>
              Прмер запроса:
             
-                 POST /person
+                 PUT  /person
                  {
                     
                  }
@@ -152,7 +493,7 @@
         </member>
         <member name="M:Web.Controllers.PersonController.AddFilm(System.String,System.String)">
             <summary>
-            Добавляет фильм для персоны, в котором снимался
+            Добавляет фильм для персоны, в котором принимал учавствие
             </summary>
             <param name="personId">айди персоны</param>
             <param name="filmId">айди фильма</param>
