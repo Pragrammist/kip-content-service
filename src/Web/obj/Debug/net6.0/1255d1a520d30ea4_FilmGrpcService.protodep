@@ -1,0 +1,2 @@
+obj/Debug/net6.0/Protos/FilmGrpcService.cs \
+obj/Debug/net6.0/Protos/FilmGrpcServiceGrpc.cs: Protos/FilmGrpcService.proto

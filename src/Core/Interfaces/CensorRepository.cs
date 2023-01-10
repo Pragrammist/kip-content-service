@@ -14,5 +14,7 @@ public interface CensorRepository
 
     void ChangeName(string id, string name);
 
-    void UpdateFilms(string id, params string[] newFilmsCollection);
+    void AddFilm(string id, string filmId);
+
+    void AddDelete(string id, string filmId);
 }

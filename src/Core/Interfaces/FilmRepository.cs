@@ -19,31 +19,53 @@ public interface FilmRepository
     void Delete(string id);
 
 
-    public void UpdateImages(string id, params string[] newCollectionOfImages);
+
+    void AddImage(string id, string image);
+
+    void DeleteImage(string id, string image);
+    
+    
+    void AddPerson(string id, string personId);
+
+    void DeletePerson(string id, string personId);
+
+    
+    void AddArticle(string id, string article);
+
+    void DeleteArticle(string id, string article);
+    
+    
+    void AddTrailer(string id, string trailer);
+
+    void DeleteTrailer(string id, string trailer);
+
+
+    void AddTizer(string id, string tizer);
+
+    void DeleteTizer(string id, string tizer);
     
 
-    public void UpdatePerson(string id, params string[] newCollectionOfPersons);
+
+    void AddRelatedFilm(string id, string relatedFilmdId);
+
+    void DeleteRelatedFilm(string id, string relatedFilmdId);   
+        
 
     
-    public void UpdateArticles(string id, params string[] newCollectionOfArticles);
+    void AddGenre(string id, string genre);
 
+    void DeleteGenre(string id, string genre);
+
+
+    void AddNomination(string id, string nomination);
+
+    void DeleteNomination(string id, string nomination);
     
-    public void UpdateTrailers(string id, params string[] newCollectionOfTrailers);
-
-
-    public void UpdateTizers(string id, params string[] newCollectionOfTizers);
-    
-
-    public void UpdateRelatedFilms(string id, params string[] newCollectionOfFilms);
-
-
-    public void UpdateGenres(string id, params string[] newCollectionOfGenres);
-
-
-    public void UpdateNominations(string id, params string[] newCollectionOfNominations);
-
 
     public void UpdateSeasonAndSerias(string id, params UpdateSeasonsDto[] newCollectionOfSeasonWithSerias);  
+
+
+
 
 
     public void UpdateScore(string id, uint score, uint scoreCount);

@@ -1,4 +1,3 @@
-
 using Core.Dtos.UpdatePersonDtos;
 using Core.Dtos.CreatePersonDtos;
 using Core.Dtos;
@@ -19,11 +18,14 @@ public interface PersonRepository
     void Delete(string id);
 
 
-    public void UpdateNominations(string id, params string[] newNominationsColl);
+    void AddFilm(string id, string filmId);
+
+    void DeleteFilm(string id, string filmId);
 
 
-    public void UpdateFilms(string id, params string[] newFilmsColl);
+    void AddNomination(string id, string filmId);
 
+    void DeleteNomination(string id, string filmId);
 
     void UpdateData(UpdatePersonDto dataToUpdate);
 }
