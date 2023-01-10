@@ -3,6 +3,6 @@ namespace Core;
 public enum FilmReleaseType
 {
     RELEASE = default,
-    PREMIERA,
-    SCREENING
+    PREMIERA = 1,
+    SCREENING = 2
 }

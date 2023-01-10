@@ -4,5 +4,5 @@ namespace Core;
 public enum FilmType
 {
     FILM = default,
-    SERIAL
+    SERIAL = 1
 }

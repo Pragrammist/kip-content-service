@@ -1,22 +1,29 @@
 
+using Core.Dtos.UpdatePersonDtos;
+using Core.Dtos.CreatePersonDtos;
+using Core.Dtos;
 
 namespace Core.Interfaces;
 
 public interface PersonRepository
 {
-    void Create(object data);
+    void Create(CreatePersonDto person);
 
-    object Get(object data);
 
-    void Delete(object data);
+    PersonDto Get(string personId);
 
-    void AddNomination(object data);
 
-    void DeleteNomination(object data);
+    IEnumerable<PersonDto> Get(uint limit = 20, uint page = 1);
 
-    void AddFilm(object data);
 
-    void DeleteFilm(object data);
+    void Delete(string id);
 
-    void UpdateData(object data);
+
+    public void UpdateNominations(string id, params string[] newNominationsColl);
+
+
+    public void UpdateFilms(string id, params string[] newFilmsColl);
+
+
+    void UpdateData(UpdatePersonDto dataToUpdate);
 }

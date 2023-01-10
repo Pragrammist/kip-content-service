@@ -1,16 +1,18 @@
-
+using Core.Dtos;
 
 namespace Core.Interfaces;
 
 public interface CensorRepository
 {
-    void Create(object data);
+    void Create(string name, params string[] films);
 
-    object Get(object data);
+    IEnumerable<CensorDto> Get(uint limit = 20, uint page = 1);
 
-    object AddFilm(string film, string censorId);
+    CensorDto Get(string id);
 
-    object DeleteFilm(string film, string censorId);
+    void Delete(string id);
 
-    void Delete(object data);
+    void ChangeName(string id, string name);
+
+    void UpdateFilms(string id, params string[] newFilmsCollection);
 }

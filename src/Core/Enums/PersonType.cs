@@ -1,7 +1,9 @@
+
+
 namespace Core;
 
 public enum PersonType 
 {
-    ACTOR,
-    PRODUCER
+    ACTOR = default,
+    PRODUCER = 1
 }
