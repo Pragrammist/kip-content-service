@@ -6,17 +6,15 @@ public class Film
 
     private Film() {}
 
-    public Film(string banner, TimeSpan duration, string name, string description, string country, 
+    public Film(string banner, string name, string description, string country, 
     FilmReleaseType releaseType = default, DateTime? release = null , DateTime? startScreening = null, 
-    DateTime? endScreening = null, uint ageLimit = 0,FilmType kindOfFilm = default, string? content = null, int? fees = null, string? id = null)
+    DateTime? endScreening = null, uint ageLimit = 0,FilmType kindOfFilm = default, 
+    string? content = null, int? fees = null, TimeSpan? duration = null)
     {
-        Id = id ?? "";
         Banner = banner;
         Content = content;
-        KindOfFilm = kindOfFilm;
         Name = name;
         AgeLimit = ageLimit;
-        Duration = duration;
         Description = description;
         Country = country;
         KindOfFilm = kindOfFilm;
@@ -25,7 +23,6 @@ public class Film
         Release = release;
         StartScreening = startScreening;
         EndScreening = endScreening;
-        Content = content;
         Fees = fees;
     }
 
@@ -112,7 +109,13 @@ public class Film
 
     public void IncrNotInterestingCount() => NotInterestingCount++;
     
-    public void DecrNotInterestingCount() => NotInterestingCount--;
+    public void DecrNotInterestingCount() 
+    {
+        if(NotInterestingCount < 1)
+            return;
+            
+        NotInterestingCount--;
+    }
 
 
     public void IncrViewCount() => ViewCount++;
@@ -120,7 +123,13 @@ public class Film
 
     public void IncrWatchedCount() => WatchedCount++;
 
-    public void DecrWatchedCount() => WatchedCount--;
+    public void DecrWatchedCount() 
+    {
+        if(WatchedCount < 1)
+            return;
+
+        WatchedCount--;
+    }
 
 
     public void IncrShareCountCount() => ShareCount++;
@@ -128,7 +137,13 @@ public class Film
 
     public void IncrWillWatchCount() => WillWatchCount++;
     
-    public void DecrWillWatchCount() => WillWatchCount--;
+    public void DecrWillWatchCount()
+    {
+        if(WillWatchCount < 1)
+            return;
+
+        WillWatchCount--;
+    }
 
 
     public void AddScore(uint score) 
@@ -158,6 +173,6 @@ public class Film
 
 
     public static Film GetTestFilmWithDefaultValue() 
-        => new Film("some banner", duration: TimeSpan.FromHours(1), "some name", "some description", "some country");
+        => new Film("some banner", "some name", "some description", "some country");
     
 }

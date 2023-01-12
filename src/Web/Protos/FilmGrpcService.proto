@@ -7,9 +7,9 @@ option csharp_namespace = "GrpcFilmService";
 
 service FilmServiceProto
 {
-    rpc IncrNotInteresting (FilmIdRequest) returns (IsSuccessResponse);
+    rpc IncrNotInterestingCount (FilmIdRequest) returns (IsSuccessResponse);
 
-    rpc DecrNotInteresting (FilmIdRequest) returns (IsSuccessResponse);
+    rpc DecrNotInterestingCount (FilmIdRequest) returns (IsSuccessResponse);
 
     rpc IncrViewsCount (FilmIdRequest) returns (IsSuccessResponse);
 
@@ -35,7 +35,7 @@ message FilmIdRequest
 message ScoreRequest
 {
     string filmdId = 1;
-    double score = 2;
+    uint32 score = 2;
 
 }
 

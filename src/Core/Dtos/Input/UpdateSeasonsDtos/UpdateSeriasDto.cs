@@ -1,7 +1,7 @@
 
 namespace Core.Dtos.UpdateSeasonsDtos;
 
-public class UpdateSeriasDto
+public class UpdateSeriaDto
 {
     public uint Num { get; set; }
 

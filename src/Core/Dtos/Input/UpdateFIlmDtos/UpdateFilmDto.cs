@@ -12,9 +12,9 @@ public class UpdateFilmDto
 
     public string? Country { get; set; }  
 
-    public string? KindOfFilm { get; set; } 
+    public int? KindOfFilm { get; set; } 
 
-    public string? ReleaseType { get; set; }  
+    public int? ReleaseType { get; set; }  
 
     public TimeSpan? Duration { get; set; } 
 

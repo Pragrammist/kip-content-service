@@ -53,18 +53,18 @@ namespace GrpcFilmService {
     static readonly grpc::Marshaller<global::GrpcFilmService.ScoreRequest> __Marshaller_ScoreRequest = grpc::Marshallers.Create(__Helper_SerializeMessage, context => __Helper_DeserializeMessage(context, global::GrpcFilmService.ScoreRequest.Parser));
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse> __Method_IncrNotInteresting = new grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(
+    static readonly grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse> __Method_IncrNotInterestingCount = new grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "IncrNotInteresting",
+        "IncrNotInterestingCount",
         __Marshaller_FilmIdRequest,
         __Marshaller_IsSuccessResponse);
 
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-    static readonly grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse> __Method_DecrNotInteresting = new grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(
+    static readonly grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse> __Method_DecrNotInterestingCount = new grpc::Method<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(
         grpc::MethodType.Unary,
         __ServiceName,
-        "DecrNotInteresting",
+        "DecrNotInterestingCount",
         __Marshaller_FilmIdRequest,
         __Marshaller_IsSuccessResponse);
 
@@ -135,13 +135,13 @@ namespace GrpcFilmService {
     public abstract partial class FilmServiceProtoBase
     {
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::GrpcFilmService.IsSuccessResponse> IncrNotInteresting(global::GrpcFilmService.FilmIdRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::GrpcFilmService.IsSuccessResponse> IncrNotInterestingCount(global::GrpcFilmService.FilmIdRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
 
       [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
-      public virtual global::System.Threading.Tasks.Task<global::GrpcFilmService.IsSuccessResponse> DecrNotInteresting(global::GrpcFilmService.FilmIdRequest request, grpc::ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::GrpcFilmService.IsSuccessResponse> DecrNotInterestingCount(global::GrpcFilmService.FilmIdRequest request, grpc::ServerCallContext context)
       {
         throw new grpc::RpcException(new grpc::Status(grpc::StatusCode.Unimplemented, ""));
       }
@@ -196,8 +196,8 @@ namespace GrpcFilmService {
     public static grpc::ServerServiceDefinition BindService(FilmServiceProtoBase serviceImpl)
     {
       return grpc::ServerServiceDefinition.CreateBuilder()
-          .AddMethod(__Method_IncrNotInteresting, serviceImpl.IncrNotInteresting)
-          .AddMethod(__Method_DecrNotInteresting, serviceImpl.DecrNotInteresting)
+          .AddMethod(__Method_IncrNotInterestingCount, serviceImpl.IncrNotInterestingCount)
+          .AddMethod(__Method_DecrNotInterestingCount, serviceImpl.DecrNotInterestingCount)
           .AddMethod(__Method_IncrViewsCount, serviceImpl.IncrViewsCount)
           .AddMethod(__Method_IncrWillWatchCount, serviceImpl.IncrWillWatchCount)
           .AddMethod(__Method_DecrWillWatchCount, serviceImpl.DecrWillWatchCount)
@@ -214,8 +214,8 @@ namespace GrpcFilmService {
     [global::System.CodeDom.Compiler.GeneratedCode("grpc_csharp_plugin", null)]
     public static void BindService(grpc::ServiceBinderBase serviceBinder, FilmServiceProtoBase serviceImpl)
     {
-      serviceBinder.AddMethod(__Method_IncrNotInteresting, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.IncrNotInteresting));
-      serviceBinder.AddMethod(__Method_DecrNotInteresting, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.DecrNotInteresting));
+      serviceBinder.AddMethod(__Method_IncrNotInterestingCount, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.IncrNotInterestingCount));
+      serviceBinder.AddMethod(__Method_DecrNotInterestingCount, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.DecrNotInterestingCount));
       serviceBinder.AddMethod(__Method_IncrViewsCount, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.IncrViewsCount));
       serviceBinder.AddMethod(__Method_IncrWillWatchCount, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.IncrWillWatchCount));
       serviceBinder.AddMethod(__Method_DecrWillWatchCount, serviceImpl == null ? null : new grpc::UnaryServerMethod<global::GrpcFilmService.FilmIdRequest, global::GrpcFilmService.IsSuccessResponse>(serviceImpl.DecrWillWatchCount));

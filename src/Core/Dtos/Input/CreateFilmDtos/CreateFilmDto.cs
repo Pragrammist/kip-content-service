@@ -44,5 +44,5 @@ public class CreateFilmDto
 
     public List<string> Nominations { get; set; } = new List<string>();
 
-    public List<Season> Seasons { get; set; } = new List<Season>();
+    public List<CreateSeasonDto> Seasons { get; set; } = new List<CreateSeasonDto>();
 }

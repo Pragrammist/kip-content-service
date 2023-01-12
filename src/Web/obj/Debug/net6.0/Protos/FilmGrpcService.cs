@@ -26,20 +26,20 @@ namespace GrpcFilmService {
           string.Concat(
             "ChxQcm90b3MvRmlsbUdycGNTZXJ2aWNlLnByb3RvIiAKDUZpbG1JZFJlcXVl",
             "c3QSDwoHZmlsbWRJZBgBIAEoCSIuCgxTY29yZVJlcXVlc3QSDwoHZmlsbWRJ",
-            "ZBgBIAEoCRINCgVzY29yZRgCIAEoASIkChFJc1N1Y2Nlc3NSZXNwb25zZRIP",
-            "CgdzdWNjZXNzGAEgASgIMoIEChBGaWxtU2VydmljZVByb3RvEjgKEkluY3JO",
-            "b3RJbnRlcmVzdGluZxIOLkZpbG1JZFJlcXVlc3QaEi5Jc1N1Y2Nlc3NSZXNw",
-            "b25zZRI4ChJEZWNyTm90SW50ZXJlc3RpbmcSDi5GaWxtSWRSZXF1ZXN0GhIu",
-            "SXNTdWNjZXNzUmVzcG9uc2USNAoOSW5jclZpZXdzQ291bnQSDi5GaWxtSWRS",
-            "ZXF1ZXN0GhIuSXNTdWNjZXNzUmVzcG9uc2USOAoSSW5jcldpbGxXYXRjaENv",
-            "dW50Eg4uRmlsbUlkUmVxdWVzdBoSLklzU3VjY2Vzc1Jlc3BvbnNlEjgKEkRl",
-            "Y3JXaWxsV2F0Y2hDb3VudBIOLkZpbG1JZFJlcXVlc3QaEi5Jc1N1Y2Nlc3NS",
-            "ZXNwb25zZRI0Cg5JbmNyU2hhcmVDb3VudBIOLkZpbG1JZFJlcXVlc3QaEi5J",
-            "c1N1Y2Nlc3NSZXNwb25zZRI2ChBJbmNyV2F0Y2hlZENvdW50Eg4uRmlsbUlk",
-            "UmVxdWVzdBoSLklzU3VjY2Vzc1Jlc3BvbnNlEjYKEERlY3JXYXRjaGVkQ291",
-            "bnQSDi5GaWxtSWRSZXF1ZXN0GhIuSXNTdWNjZXNzUmVzcG9uc2USKgoFU2Nv",
-            "cmUSDS5TY29yZVJlcXVlc3QaEi5Jc1N1Y2Nlc3NSZXNwb25zZUISqgIPR3Jw",
-            "Y0ZpbG1TZXJ2aWNlYgZwcm90bzM="));
+            "ZBgBIAEoCRINCgVzY29yZRgCIAEoDSIkChFJc1N1Y2Nlc3NSZXNwb25zZRIP",
+            "CgdzdWNjZXNzGAEgASgIMowEChBGaWxtU2VydmljZVByb3RvEj0KF0luY3JO",
+            "b3RJbnRlcmVzdGluZ0NvdW50Eg4uRmlsbUlkUmVxdWVzdBoSLklzU3VjY2Vz",
+            "c1Jlc3BvbnNlEj0KF0RlY3JOb3RJbnRlcmVzdGluZ0NvdW50Eg4uRmlsbUlk",
+            "UmVxdWVzdBoSLklzU3VjY2Vzc1Jlc3BvbnNlEjQKDkluY3JWaWV3c0NvdW50",
+            "Eg4uRmlsbUlkUmVxdWVzdBoSLklzU3VjY2Vzc1Jlc3BvbnNlEjgKEkluY3JX",
+            "aWxsV2F0Y2hDb3VudBIOLkZpbG1JZFJlcXVlc3QaEi5Jc1N1Y2Nlc3NSZXNw",
+            "b25zZRI4ChJEZWNyV2lsbFdhdGNoQ291bnQSDi5GaWxtSWRSZXF1ZXN0GhIu",
+            "SXNTdWNjZXNzUmVzcG9uc2USNAoOSW5jclNoYXJlQ291bnQSDi5GaWxtSWRS",
+            "ZXF1ZXN0GhIuSXNTdWNjZXNzUmVzcG9uc2USNgoQSW5jcldhdGNoZWRDb3Vu",
+            "dBIOLkZpbG1JZFJlcXVlc3QaEi5Jc1N1Y2Nlc3NSZXNwb25zZRI2ChBEZWNy",
+            "V2F0Y2hlZENvdW50Eg4uRmlsbUlkUmVxdWVzdBoSLklzU3VjY2Vzc1Jlc3Bv",
+            "bnNlEioKBVNjb3JlEg0uU2NvcmVSZXF1ZXN0GhIuSXNTdWNjZXNzUmVzcG9u",
+            "c2VCEqoCD0dycGNGaWxtU2VydmljZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
@@ -300,10 +300,10 @@ namespace GrpcFilmService {
 
     /// <summary>Field number for the "score" field.</summary>
     public const int ScoreFieldNumber = 2;
-    private double score_;
+    private uint score_;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
-    public double Score {
+    public uint Score {
       get { return score_; }
       set {
         score_ = value;
@@ -326,7 +326,7 @@ namespace GrpcFilmService {
         return true;
       }
       if (FilmdId != other.FilmdId) return false;
-      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Score, other.Score)) return false;
+      if (Score != other.Score) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -335,7 +335,7 @@ namespace GrpcFilmService {
     public override int GetHashCode() {
       int hash = 1;
       if (FilmdId.Length != 0) hash ^= FilmdId.GetHashCode();
-      if (Score != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Score);
+      if (Score != 0) hash ^= Score.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -358,9 +358,9 @@ namespace GrpcFilmService {
         output.WriteRawTag(10);
         output.WriteString(FilmdId);
       }
-      if (Score != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Score);
+      if (Score != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(Score);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
@@ -376,9 +376,9 @@ namespace GrpcFilmService {
         output.WriteRawTag(10);
         output.WriteString(FilmdId);
       }
-      if (Score != 0D) {
-        output.WriteRawTag(17);
-        output.WriteDouble(Score);
+      if (Score != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(Score);
       }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
@@ -393,8 +393,8 @@ namespace GrpcFilmService {
       if (FilmdId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(FilmdId);
       }
-      if (Score != 0D) {
-        size += 1 + 8;
+      if (Score != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Score);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -411,7 +411,7 @@ namespace GrpcFilmService {
       if (other.FilmdId.Length != 0) {
         FilmdId = other.FilmdId;
       }
-      if (other.Score != 0D) {
+      if (other.Score != 0) {
         Score = other.Score;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
@@ -433,8 +433,8 @@ namespace GrpcFilmService {
             FilmdId = input.ReadString();
             break;
           }
-          case 17: {
-            Score = input.ReadDouble();
+          case 16: {
+            Score = input.ReadUInt32();
             break;
           }
         }
@@ -456,8 +456,8 @@ namespace GrpcFilmService {
             FilmdId = input.ReadString();
             break;
           }
-          case 17: {
-            Score = input.ReadDouble();
+          case 16: {
+            Score = input.ReadUInt32();
             break;
           }
         }

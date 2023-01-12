@@ -1,11 +1,11 @@
 
 namespace Core.Dtos.UpdateSeasonsDtos;
 
-public class UpdateSeasonsDto
+public class UpdateSeasonDto
 {
     public uint Num { get; set; }
 
-    public List<UpdateSeriasDto> Serias { get; set; } = new List<UpdateSeriasDto>();
+    public List<UpdateSeriaDto> Serias { get; set; } = new List<UpdateSeriaDto>();
 
     public string Banner { get; set; } = null!;
 }
