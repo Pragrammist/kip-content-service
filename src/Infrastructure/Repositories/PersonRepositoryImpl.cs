@@ -18,19 +18,21 @@ public class PersonRepositoryImpl : PersonRepository
     {
         _censorMongoRepo = censorMongoRepo;
     }
-    public async Task AddFilm(string id, string filmId, CancellationToken token = default) =>
-        await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> AddFilm(string id, string filmId, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Person>.Update.AddToSet(per => per.Films, filmId),
             cancellationToken: token
-        );
+        ))
+        .ModifiedCount > 0;
     
-    public async Task AddNomination(string id, string nomination, CancellationToken token = default) =>
-        await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> AddNomination(string id, string nomination, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Person>.Update.AddToSet(per => per.Nominations, nomination),
             cancellationToken: token
-        );
+        ))
+        .ModifiedCount > 0;
 
     public async Task<PersonDto> Create(CreatePersonDto person, CancellationToken token = default)
     {
@@ -39,24 +41,25 @@ public class PersonRepositoryImpl : PersonRepository
         return personToCreate.Adapt<PersonDto>();
     }
 
-    public async Task Delete(string id, CancellationToken token = default) =>
-        await _censorMongoRepo.DeleteOneAsync(
+    public async Task<bool> Delete(string id, CancellationToken token = default) =>
+        (await _censorMongoRepo.DeleteOneAsync(
             filter: FilterById(id),
             cancellationToken: token
-        );
+        )).DeletedCount > 0;
     
-
-    public async Task DeleteFilm(string id, string filmId, CancellationToken token = default) =>
-        await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Person>.Update.Pull(per => per.Films, filmId)
-        );
+        ))
+        .ModifiedCount > 0;
 
-    public async Task DeleteNomination(string id, string nomination, CancellationToken token = default) =>
-        await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> DeleteNomination(string id, string nomination, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Person>.Update.Pull(per => per.Nominations, nomination)
-        );
+        ))
+        .ModifiedCount > 0;
 
     public async Task<PersonDto?> Get(string id, CancellationToken token = default) =>
         (await _censorMongoRepo.FindAsync(
@@ -79,13 +82,13 @@ public class PersonRepositoryImpl : PersonRepository
         .ToEnumerable()
         .Adapt<IEnumerable<PersonDto>>();
 
-    public async Task<PersonDto> UpdateData(string id, UpdatePersonDto dataToUpdate, CancellationToken token = default) =>
-        (await _censorMongoRepo.FindOneAndUpdateAsync(
+    public async Task<bool> UpdateData(string id, UpdatePersonDto dataToUpdate, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: BuildPersonUpdate(dataToUpdate),
             cancellationToken: token
         ))
-        .Adapt<PersonDto>();
+        .ModifiedCount > 0;
     
     UpdateDefinition<Person> BuildPersonUpdate(UpdatePersonDto dataToUpdate)
     {

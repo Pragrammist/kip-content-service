@@ -155,20 +155,9 @@ public class Film
 
         ScoreCount++;
 
-        Score = (Score * beforeCount) + score / ScoreCount;
+        Score = ((Score * beforeCount) + score) / ScoreCount;
     }
 
-    public void DelScore(uint score)
-    {
-        if(ScoreCount < 1 || score < 1 || score > 5)
-            return;
-        
-        var beforeCount = ScoreCount;
-
-        ScoreCount--;
-
-        Score = (Score * beforeCount) - score / ScoreCount;
-    }
 
 
 

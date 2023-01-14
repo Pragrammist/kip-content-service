@@ -14,25 +14,21 @@ public class CensorRepositoryImpl : CensorRepository
     {
         _censorMongoRepo = censorMongoRepo;
     }
-    public async Task DeleteFilm(string id, string filmId, CancellationToken token = default) =>
-        await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id), 
             update: Builders<Censor>.Update.Pull(cens => cens.Films, filmId), // pull is used to delete. Thanks to mongo driver for this
-            cancellationToken: token);
+            cancellationToken: token)).ModifiedCount > 0;
     
 
-    public async Task AddFilm(string id, string filmId, CancellationToken token = default)=>
-        await _censorMongoRepo.UpdateOneAsync(
-            filter: FilterById(id), 
-            update: Builders<Censor>.Update.AddToSet(cens => cens.Films, filmId), 
-            cancellationToken: token);
 
-    public async Task<CensorDto> ChangeName(string id, string name, CancellationToken token = default)=>
-        (await _censorMongoRepo.FindOneAndUpdateAsync(
+    public async Task<bool> ChangeName(string id, string name, CancellationToken token = default) =>    
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id), 
             update: Builders<Censor>.Update.Set(cens => cens.Name, name), 
-            cancellationToken: token))
-            .Adapt<CensorDto>();
+            cancellationToken: token)).ModifiedCount > 0;
+            
+        
     
 
     public async Task<CensorDto> Create(string name, CancellationToken token = default, List<string>? films = null) {
@@ -44,10 +40,10 @@ public class CensorRepositoryImpl : CensorRepository
         return censor.Adapt<CensorDto>();
     }
 
-    public async Task Delete(string id, CancellationToken token = default) =>
-        await _censorMongoRepo.DeleteOneAsync(
+    public async Task<bool> Delete(string id, CancellationToken token = default) =>
+        (await _censorMongoRepo.DeleteOneAsync(
             filter: FilterById(id), 
-            cancellationToken: token);
+            cancellationToken: token)).DeletedCount > 0;
     
 
     public async Task<IEnumerable<CensorDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default) =>
@@ -69,11 +65,11 @@ public class CensorRepositoryImpl : CensorRepository
             cancellationToken: token
         )).FirstOrDefault().Adapt<CensorDto>();
 
-    public async Task SetFilmsTop(string id, List<string> films, CancellationToken token = default) =>
-        await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> SetFilmsTop(string id, List<string> films, CancellationToken token = default) =>
+        (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Censor>.Update.Set(cens => cens.Films, films),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
 }

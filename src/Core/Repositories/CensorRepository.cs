@@ -10,13 +10,13 @@ public interface CensorRepository
 
     Task<CensorDto?> Get(string id, CancellationToken token = default);
 
-    Task Delete(string id, CancellationToken token = default);
+    Task<bool> Delete(string id, CancellationToken token = default);
 
-    Task<CensorDto> ChangeName(string id, string name, CancellationToken token = default);
+    Task<bool> ChangeName(string id, string name, CancellationToken token = default);
 
     //Task AddFilm(string id, string filmId, CancellationToken token = default);
 
-    Task SetFilmsTop(string id, List<string> films, CancellationToken token = default);
+    Task<bool> SetFilmsTop(string id, List<string> films, CancellationToken token = default);
 
-    Task DeleteFilm(string id, string filmId, CancellationToken token = default);
+    Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default);
 }

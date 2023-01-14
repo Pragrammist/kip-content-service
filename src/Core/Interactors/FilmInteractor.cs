@@ -12,115 +12,115 @@ public class FilmInteractor
         _entityFilmRepository = entityFilmRepository;
     }
 
-    public async Task AddScore(string id, uint score, CancellationToken token = default)
+    public async Task<bool> AddScore(string id, uint score, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.AddScore(score);
 
-        await _filmRepository.UpdateScore(id, film.Score, film.ScoreCount, token);
+        return await _filmRepository.UpdateScore(id, film.Score, film.ScoreCount, token);
     }
 
-    public async Task IncrWillWatchCount(string id, CancellationToken token = default)
+    public async Task<bool> IncrWillWatchCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.IncrWillWatchCount();
 
-        await _filmRepository.UpdateWillWatchCount(id, film.WillWatchCount);
+        return await _filmRepository.UpdateWillWatchCount(id, film.WillWatchCount);
     }
 
-    public async Task DecrWillWatchCount(string id, CancellationToken token = default)
+    public async Task<bool> DecrWillWatchCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.DecrWillWatchCount();
 
-        await _filmRepository.UpdateWillWatchCount(id, film.WillWatchCount);
+        return await _filmRepository.UpdateWillWatchCount(id, film.WillWatchCount);
     }
 
 
-    public async Task IncrShareCount(string id, CancellationToken token = default)
+    public async Task<bool> IncrShareCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.IncrShareCountCount();
 
-        await _filmRepository.UpdateShareCount(id, film.ShareCount);
+        return await _filmRepository.UpdateShareCount(id, film.ShareCount);
     }
 
 
-    public async Task IncrViewsCount(string id, CancellationToken token = default)
+    public async Task<bool> IncrViewsCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.IncrViewCount();
 
-        await _filmRepository.UpdateViewCount(id, film.ViewCount);
+        return await _filmRepository.UpdateViewCount(id, film.ViewCount);
     }
 
 
-    public async Task IncrNotInterestingCount(string id, CancellationToken token = default)
+    public async Task<bool> IncrNotInterestingCount(string id, CancellationToken token = default)
     {   
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.IncrNotInterestingCount();
 
-        await _filmRepository.UpdateNotInterestingCount(id, film.NotInterestingCount);
+        return await _filmRepository.UpdateNotInterestingCount(id, film.NotInterestingCount);
     }
 
-    public async Task DecrNotInterestingCount(string id, CancellationToken token = default)
+    public async Task<bool> DecrNotInterestingCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.DecrNotInterestingCount();
 
-        await _filmRepository.UpdateNotInterestingCount(id, film.NotInterestingCount);
+        return await _filmRepository.UpdateNotInterestingCount(id, film.NotInterestingCount);
     }
 
 
-    public async Task IncrWatchedCount(string id, CancellationToken token = default)
+    public async Task<bool> IncrWatchedCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.IncrWatchedCount();
 
-        await _filmRepository.UpdateWatchedCount(id, film.WatchedCount);
+        return await _filmRepository.UpdateWatchedCount(id, film.WatchedCount);
     }
 
-    public async Task DecrWatchedCount(string id, CancellationToken token = default)
+    public async Task<bool> DecrWatchedCount(string id, CancellationToken token = default)
     {
         var film = await _entityFilmRepository.Get(id, token);
 
         if(film is null)
-            return;
+            return false;
 
         film.DecrWatchedCount();
 
-        await _filmRepository.UpdateWatchedCount(id, film.WatchedCount);
+        return await _filmRepository.UpdateWatchedCount(id, film.WatchedCount);
     }
 }

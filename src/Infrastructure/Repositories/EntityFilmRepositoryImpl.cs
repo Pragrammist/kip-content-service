@@ -13,7 +13,7 @@ public class EntityFilmRepositoryImpl : EntityFilmRepository
     {
         _censorMongoRepo = censorMongoRepo;
     }
-    public async Task<Film?> Get(string id, CancellationToken token) =>
+    public async Task<Film?> Get(string id, CancellationToken token = default) =>
         (await _censorMongoRepo.FindAsync(
             filter: FilterById(id),
             cancellationToken: token

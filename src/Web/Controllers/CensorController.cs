@@ -24,8 +24,10 @@ public class CensorController : ControllerBase
     public async Task<IActionResult> Get(string censorId, CancellationToken token)
     {
         var censor = await _censorRepo.Get(censorId, token);
+        
         if(censor is null || censor.Id is null)
             return NotFound();
+
         return new ObjectResult(censor);
     }
     /// <summary>

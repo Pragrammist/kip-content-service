@@ -47,13 +47,14 @@ public class FilmRepositoryImpl : FilmRepository
         )).FirstOrDefault().Adapt<FilmDto>();
     
 
-public async Task<FilmDto> UpdateData(string id, UpdateFilmDto film, CancellationToken token = default) =>
-        (await _filmMongoRepo.FindOneAndUpdateAsync(
+    public async Task<bool> UpdateData(string id, UpdateFilmDto film, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: BuildUpdateDefition(film),
             cancellationToken: token
-        )).Adapt<FilmDto>();
+        )).ModifiedCount > 0;
     
+
     UpdateDefinition<Film> BuildUpdateDefition(UpdateFilmDto film)
     {
         var updList = new List<UpdateDefinition<Film>>();
@@ -104,172 +105,183 @@ public async Task<FilmDto> UpdateData(string id, UpdateFilmDto film, Cancellatio
     }
     
 
-    public async Task Delete(string id, CancellationToken token = default) =>
-        await _filmMongoRepo.DeleteOneAsync(
+    public async Task<bool> Delete(string id, CancellationToken token = default) =>
+        (await _filmMongoRepo.DeleteOneAsync(
             filter: FilterById(id),
             cancellationToken: token
-        );
+        )).DeletedCount > 0;
 
-    public async Task AddImage(string id, string image, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> AddImage(string id, string image, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Images, image),
             cancellationToken: token
-        );
-
-    public async Task DeleteImage(string id, string image, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;
+    public async Task<bool> DeleteImage(string id, string image, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Images, image),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task AddPerson(string id, string personId, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> AddPerson(string id, string personId, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Stuff, personId),
             cancellationToken: token
-        );
-
-    public async Task DeletePerson(string id, string personId, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;
+    public async Task<bool> DeletePerson(string id, string personId, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Stuff, personId),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task AddArticle(string id, string article, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> AddArticle(string id, string article, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Articles, article),
             cancellationToken: token
-        );
-
-    public async Task DeleteArticle(string id, string article, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;
+    public async Task<bool> DeleteArticle(string id, string article, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Articles, article),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async  Task AddTrailer(string id, string trailer, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> AddTrailer(string id, string trailer, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Trailers, trailer),
             cancellationToken: token
-        );
-
-    public async Task DeleteTrailer(string id, string trailer, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;   
+    public async Task<bool> DeleteTrailer(string id, string trailer, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Trailers, trailer),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task AddTizer(string id, string tizer, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> AddTizer(string id, string tizer, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Tizers, tizer),
             cancellationToken: token
-        );
-
-    public async Task DeleteTizer(string id, string tizer, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;
+    public async Task<bool> DeleteTizer(string id, string tizer, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Tizers, tizer),
             cancellationToken: token
-        );
-    public async Task AddRelatedFilm(string id, string relatedFilmdId, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;
+    
+    
+    public async Task<bool> AddRelatedFilm(string id, string relatedFilmdId, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.RelatedFilms, relatedFilmdId),
             cancellationToken: token
-        );
-
-    public async Task DeleteRelatedFilm(string id, string relatedFilmdId, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+        )).ModifiedCount > 0;
+    public async Task<bool> DeleteRelatedFilm(string id, string relatedFilmdId, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.RelatedFilms, relatedFilmdId),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task AddGenre(string id, string genre, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> AddGenre(string id, string genre, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Genres, genre),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task DeleteGenre(string id, string genre, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+    public async Task<bool> DeleteGenre(string id, string genre, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Genres, genre),
-            cancellationToken: token);
+            cancellationToken: token)).ModifiedCount > 0;
 
-    public async Task AddNomination(string id, string nomination, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+
+    public async Task<bool> AddNomination(string id, string nomination, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.AddToSet(f => f.Nominations, nomination),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task DeleteNomination(string id, string nomination, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+    public async Task<bool> DeleteNomination(string id, string nomination, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Film>.Update.Pull(f => f.Nominations, nomination),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task UpdateSeasonAndSerias(string id, List<UpdateSeasonDto> newCollectionOfSeasonWithSerias, CancellationToken token = default) => 
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateSeasonAndSerias(string id, List<UpdateSeasonDto> newCollectionOfSeasonWithSerias, CancellationToken token = default) => 
+        (await _filmMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: BuildUpdateSeasonsDefition(newCollectionOfSeasonWithSerias),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
     UpdateDefinition<Film> BuildUpdateSeasonsDefition(List<UpdateSeasonDto> newCollectionOfSeasonWithSerias) =>
         Builders<Film>.Update.Set(f => f.Seasons, newCollectionOfSeasonWithSerias.Adapt<List<Season>>());
    
-    public async Task UpdateScore(string id, double score, uint scoreCount, CancellationToken token = default) => 
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateScore(string id, double score, uint scoreCount, CancellationToken token = default) => 
+        (await _filmMongoRepo.UpdateOneAsync(
             filter:FilterById(id),
             update: Builders<Film>.Update.Set(f => f.Score, score)
                                          .Set(f => f.ScoreCount, scoreCount),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task UpdateWillWatchCount(string id, uint willWatchCount, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateWillWatchCount(string id, uint willWatchCount, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter:FilterById(id),
             update: Builders<Film>.Update.Set(f => f.WillWatchCount, willWatchCount),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task UpdateShareCount(string id, uint shareCount, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateShareCount(string id, uint shareCount, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter:FilterById(id),
             update: Builders<Film>.Update.Set(f => f.ShareCount, shareCount),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task UpdateWatchedCount(string id, uint watchedCount, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateWatchedCount(string id, uint watchedCount, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter:FilterById(id),
             update: Builders<Film>.Update.Set(f => f.WatchedCount, watchedCount),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task UpdateViewCount(string id, uint viewCount, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateViewCount(string id, uint viewCount, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter:FilterById(id),
             update: Builders<Film>.Update.Set(f => f.ViewCount, viewCount),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 
-    public async Task UpdateNotInterestingCount(string id, uint notInterestingCount, CancellationToken token = default) =>
-        await _filmMongoRepo.UpdateOneAsync(
+
+    public async Task<bool> UpdateNotInterestingCount(string id, uint notInterestingCount, CancellationToken token = default) =>
+        (await _filmMongoRepo.UpdateOneAsync(
             filter:FilterById(id),
             update: Builders<Film>.Update.Set(f => f.NotInterestingCount, notInterestingCount),
             cancellationToken: token
-        );
+        )).ModifiedCount > 0;
 }
