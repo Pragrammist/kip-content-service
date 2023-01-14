@@ -1,0 +1,36 @@
+version: "3.9" 
+services:
+  kip-content:
+    depends_on:
+      - 'kip-content-mongo'
+    
+      
+    container_name: "kip-content"
+    image: kip-content
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - LOGSTASH_URL=http://localhost:8080
+      - MONGODB_CONNECTION_STRING=mongodb://localhost:27019
+      - DB_NAME=kip_content_db
+      - CENSOR_COLLECTION_NAME=censors
+      - PERSON_COLLECTION_NAME=persons
+      - FILM_COLLECTION_NAME=films
+    ports:
+      - 5002:80
+      - 5003:81
+      
+    build:
+      context: .
+      dockerfile: Dockerfile
+      network: kip-content
+
+  kip-content-mongo:
+    restart: always
+    image: 'mongo'
+    container_name: kip-content-mongo
+    ports:
+      - '27019:27017'
+    build:
+        context: .
+        network: kip-content
+      
