@@ -15,7 +15,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
     
   </ItemGroup>
-
+  <ItemGroup>
+    <InternalsVisibleTo Include="MinimalApiPlayground.Tests" />
+  </ItemGroup>
   <ItemGroup>
     <Protobuf Include="Protos\FilmGrpcService.proto" GrpcServices="Server" />
     <PackageReference Include="Google.Protobuf" Version="3.21.12" />

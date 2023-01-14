@@ -1,0 +1,5 @@
+{
+  "Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/f\/Documents\/dotnet-app\/kip-content-service\/src\/Core",
+  "Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/f\/Documents\/dotnet-app\/kip-content-service\/src\/Infrastructure",
+  "Web, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null": "\/home\/f\/Documents\/dotnet-app\/kip-content-service\/src\/Web"
+}

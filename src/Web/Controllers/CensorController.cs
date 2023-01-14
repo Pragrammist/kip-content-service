@@ -54,8 +54,12 @@ public class CensorController : ControllerBase
     [HttpDelete("{censorId}")]
     public async Task<IActionResult> Delete(string censorId, CancellationToken token)
     {
-        await _censorRepo.Delete(censorId, token);
-        return Ok();
+        var isSuccess = await _censorRepo.Delete(censorId, token);
+
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
     }
     /// <summary>
     /// Создает цензора
@@ -84,8 +88,12 @@ public class CensorController : ControllerBase
     [HttpPut("films/{censorId}/")]
     public async Task<IActionResult> SetFilmsTop(List<string> films, string censorId, CancellationToken token)
     {
-        await _censorRepo.SetFilmsTop(censorId, films);;
-        return Ok();
+        var isSuccess = await _censorRepo.SetFilmsTop(censorId, films);
+
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
     }
 
     /// <summary>
@@ -99,8 +107,12 @@ public class CensorController : ControllerBase
     [HttpDelete("films/{censorId}/{filmdId}")]
     public async Task<IActionResult> DeleteFilm(string filmdId, string censorId)
     {
-        await _censorRepo.DeleteFilm(censorId, filmdId);
-        return Ok();
+        var isSuccess = await _censorRepo.DeleteFilm(censorId, filmdId);
+
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
     }
 
     /// <summary>
@@ -113,7 +125,11 @@ public class CensorController : ControllerBase
     [HttpPut("name/{censorId}/{name}")]
     public async Task<IActionResult> ChangeName(string censorId, string name)
     {
-        var censor = await _censorRepo.ChangeName(censorId, name);
-        return new ObjectResult(censor);
+        var isSuccess = await _censorRepo.ChangeName(censorId, name);
+        
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
     }
 }

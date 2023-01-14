@@ -63,9 +63,12 @@ public class FilmController : ControllerBase
     [HttpDelete("{filmId}")]
     public async Task<IActionResult> Delete(string filmId, CancellationToken token)
     {
-        await _filmRepository.Delete(filmId, token);
+        var isSuccess =  await _filmRepository.Delete(filmId, token);
 
-        return Ok();
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
     }
     
     /// <summary>
@@ -111,9 +114,12 @@ public class FilmController : ControllerBase
     [HttpPut("{filmId}")]
     public async Task<IActionResult> ChangeInfo(string filmId, UpdateFilmDto film, CancellationToken token)
     {
-        var filmRes = await _filmRepository.UpdateData(filmId, film, token);
-
-        return new ObjectResult(filmRes);
+        var isSuccess = await _filmRepository.UpdateData(filmId, film, token);
+        
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
     }
 
     /// <summary>

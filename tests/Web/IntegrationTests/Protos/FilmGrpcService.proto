@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+
+
+option csharp_namespace = "GrpcFilmService";
+
+
+service FilmServiceProto
+{
+    rpc IncrNotInterestingCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc DecrNotInterestingCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc IncrViewsCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc IncrWillWatchCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc DecrWillWatchCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc IncrShareCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc IncrWatchedCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc DecrWatchedCount (FilmIdRequest) returns (IsSuccessResponse);
+
+    rpc Score (ScoreRequest) returns (IsSuccessResponse);
+}
+
+message FilmIdRequest
+{
+    string filmdId = 1;
+
+}
+
+message ScoreRequest
+{
+    string filmdId = 1;
+    uint32 score = 2;
+
+}
+
+message IsSuccessResponse
+{
+    bool success = 1;
+}
