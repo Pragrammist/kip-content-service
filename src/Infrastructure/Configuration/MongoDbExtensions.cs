@@ -51,4 +51,14 @@ public static class MongoDbExtensions
         });
         return services;
     }
+    
+    public static IServiceCollection AddFilmSelectionMongoDbCollection(this IServiceCollection services, string mongoCollectionName)
+    {
+        services.AddSingleton<IMongoCollection<FilmSelection>>(p =>
+        {
+            var db = p.GetRequiredService<IMongoDatabase>();
+            return db.GetCollection<FilmSelection>(mongoCollectionName);
+        });
+        return services;
+    }
 }

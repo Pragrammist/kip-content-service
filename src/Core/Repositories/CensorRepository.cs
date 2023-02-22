@@ -4,7 +4,7 @@ namespace Core.Repositories;
 
 public interface CensorRepository
 {
-    Task<CensorDto> Create(string name, CancellationToken token = default, List<string>? films = null);
+    Task<CensorDto?> Create(string name, CancellationToken token = default, List<string>? films = null);
 
     Task<IEnumerable<CensorDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default);
 

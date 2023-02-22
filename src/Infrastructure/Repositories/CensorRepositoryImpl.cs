@@ -33,7 +33,17 @@ public class CensorRepositoryImpl : CensorRepository
         
     
 
-    public async Task<CensorDto> Create(string name, CancellationToken token = default, List<string>? films = null) {
+    public async Task<CensorDto?> Create(string name, CancellationToken token = default, List<string>? films = null) {
+        foreach(var film in films ?? new List<string>())
+        {
+            var isFound = (await _filmsCol.FindAsync(
+                filter: Builders<Film>.Filter.Eq(f => f.Id, film),
+                cancellationToken: token
+            )).FirstOrDefault() is not null;
+            if(!isFound)
+                return null;
+        }
+        
         var censor = new Censor(name, films: films);
         await _censorMongoRepo.InsertOneAsync(
             document: censor,
@@ -85,6 +95,6 @@ public class CensorRepositoryImpl : CensorRepository
         )).ModifiedCount > 0;
 
     }
-        
+
 
 }

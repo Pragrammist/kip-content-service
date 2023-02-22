@@ -30,6 +30,12 @@ public static class MongoDbConfiguration
             map.AutoMap();
             SetStringId(map);
         });
+
+        BsonClassMap.RegisterClassMap<FilmSelection>(map =>
+        {
+            map.AutoMap();
+            SetStringId(map);
+        });
     }
 
 }

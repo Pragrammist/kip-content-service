@@ -105,17 +105,34 @@ public class CensorRepositoryIntegrationTest
     [Fact]
     public async Task Create()
     {
-        var censor = await _repo.Create("somename", films: new List<string>(){ "фильм1", "фильм2", "фильм3" });
+        var censor = await CreateCensorWithRandomName();
 
 
         censor.Should().NotBeNull();
     }
 
+    [Fact]
+    public async Task CreateWitnNoExistsFilms()
+    {
+        var rName = Path.GetRandomFileName();
+        var censor = await _repo.Create(rName, films: new List<string>(){ 
+            ObjectId.GenerateNewId().ToString(),
+            ObjectId.GenerateNewId().ToString()
+        });
+
+
+        censor.Should().BeNull();
+    }
+
     async Task <CensorDto> CreateCensorWithRandomName()
     {
         var rName = Path.GetRandomFileName();
-        var censor = await _repo.Create(rName, films: new List<string>(){ "фильм1", "фильм2", "фильм3" });
-        return censor;
+        var censor = await _repo.Create(rName, films: new List<string>(){ 
+            await CreateFilmWithRandomName(), 
+            await CreateFilmWithRandomName(), 
+            await CreateFilmWithRandomName() 
+        });
+        return censor ?? throw new NullReferenceException("censor in tests in null");
     }
     async Task<string> CreateFilmWithRandomName()
     {

@@ -17,6 +17,9 @@ public static class AppServicesExtension
         => services.AddTransient<FilmRepository, FilmRepositoryImpl>()
                     .AddTransient<EntityFilmRepository, EntityFilmRepositoryImpl>();
     
+    public static IServiceCollection AddFilmSelectionRepository(this IServiceCollection services)
+        => services.AddTransient<FilmSelectionRepository, FilmSelectionRepositoryImpl>();
+
     public static IServiceCollection AddFilmInteractor(this IServiceCollection services)
         => services.AddTransient<FilmInteractor>();
 }

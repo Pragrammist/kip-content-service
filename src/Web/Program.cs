@@ -36,6 +36,7 @@ public class Program
             var censorsCollection = configuration["CENSOR_COLLECTION_NAME"] ?? "censors";
             var personsCollection = configuration["PERSON_COLLECTION_NAME"] ?? "persons";
             var filmsCollection = configuration["FILM_COLLECTION_NAME"] ?? "films";
+            var filmSelectionsCollection = configuration["FILM_COLLECTION_NAME"] ?? "selections";
 
             // Add services to the container.
 
@@ -45,7 +46,8 @@ public class Program
             builder.Services.AddMongoDb(mongoConnection, dbName)
                             .AddCensorMongoDbCollection(censorsCollection)
                             .AddPersonMongoDbCollection(personsCollection)
-                            .AddFilmMongoDbCollection(filmsCollection);
+                            .AddFilmMongoDbCollection(filmsCollection)
+                            .AddFilmSelectionMongoDbCollection(filmSelectionsCollection);
             
             builder.Services.AddCensorRepository()
                             .AddPersonRepository()
