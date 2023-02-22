@@ -11,6 +11,9 @@ using FluentAssertions;
 using Core.Dtos.CreateFilmDtos;
 using System.Collections.Generic;
 using System.IO;
+using Core.Dtos.CreatePersonDtos;
+using Core;
+using MongoDB.Bson;
 
 namespace IntegrationTests;
 
@@ -26,7 +29,7 @@ public class FilmRepositoryIntegrationTest
     {
         MapsterConfiguration.ConfigureMapsterGlobally();
         _mongoFixture = mongoFixture;
-        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection);
+        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection);
     }
     
     [Fact]
@@ -55,20 +58,32 @@ public class FilmRepositoryIntegrationTest
     public async Task AddPerson()
     {
         var film = await CreateFilmWithRandomName();
+        var personId = await CreatePerson();
 
-        var res = await _repo.AddPerson(film.Id, "person");
+        var res = await _repo.AddPerson(film.Id, personId);
 
         res.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task AddNotExistsPerson()
+    {
+        var film = await CreateFilmWithRandomName();
+        var personId = ObjectId.GenerateNewId().ToString();
+
+        var res = await _repo.AddPerson(film.Id, personId);
+
+        res.Should().BeFalse();
     }
 
     [Fact]
     public async Task DeletePerson()
     {
         var film = await CreateFilmWithRandomName();
-        var person = "person";
-        await _repo.AddPerson(film.Id, person);
+        var personId = await CreatePerson();
+        var personIsAdded = await _repo.AddPerson(film.Id, personId);
         
-        var res =  await _repo.DeletePerson(film.Id, person);
+        var res =  await _repo.DeletePerson(film.Id, personId);
 
         res.Should().BeTrue();
     }
@@ -123,18 +138,30 @@ public class FilmRepositoryIntegrationTest
     public async Task AddRelatedFilm()
     {
         var film = await CreateFilmWithRandomName();
+        var relatedFilm = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddRelatedFilm(film.Id, "film");
+        var res = await _repo.AddRelatedFilm(film.Id, relatedFilm.Id);
 
         res.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task AddNotExistsRelatedFilm()
+    {
+        var film = await CreateFilmWithRandomName();
+        var relatedFilm = ObjectId.GenerateNewId().ToString();
+
+        var res = await _repo.AddRelatedFilm(film.Id, relatedFilm);
+
+        res.Should().BeFalse();
     }
 
     [Fact]
     public async Task DeleteRelatedFilm()
     {
         var film = await CreateFilmWithRandomName();
-        var relatedFilmdId = "filmdid";
-        await _repo.AddRelatedFilm(film.Id, relatedFilmdId);
+        var relatedFilmdId = (await CreateFilmWithRandomName()).Id;
+        var filmAdded = await _repo.AddRelatedFilm(film.Id, relatedFilmdId);
         
         var res = await _repo.DeleteRelatedFilm(film.Id, relatedFilmdId);
 
@@ -284,36 +311,7 @@ public class FilmRepositoryIntegrationTest
         film.Should().NotBeNull();
     }
 
-    async Task<FilmDto> CreateFilmWithRandomName()
-    {
-        var film = new CreateFilmDto 
-        {
-            AgeLimit = 3,
-            Articles = new List<string>(),
-            Banner = RandomText,
-            Content = RandomText,
-            Country = RandomText,
-            Description = RandomText,
-            Duration = TimeSpan.FromHours(1),
-            EndScreening = DateTime.Today,
-            Fees = 30,
-            Genres = new List<string>(),
-            Images = new List<string>(),
-            KindOfFilm = 0,
-            Name = RandomText,
-            Nominations = new List<string>(),
-            RelatedFilms = new List<string>(),
-            Release = DateTime.Today,
-            ReleaseType = 0,
-            Seasons = new List<CreateSeasonDto>(),
-            StartScreening = DateTime.Today,
-            Stuff = new List<string>(),
-            Tizers = new List<string>(),
-            Trailers = new List<string>()
-        };
-
-        return await _repo.Create(film);
-    }
+    
 
     [Fact]
     public async Task Get()
@@ -513,5 +511,43 @@ public class FilmRepositoryIntegrationTest
         var res = await _repo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
+    }
+
+    async Task<FilmDto> CreateFilmWithRandomName()
+    {
+        var film = new CreateFilmDto 
+        {
+            AgeLimit = 3,
+            Articles = new List<string>(),
+            Banner = RandomText,
+            Content = RandomText,
+            Country = RandomText,
+            Description = RandomText,
+            Duration = TimeSpan.FromHours(1),
+            EndScreening = DateTime.Today,
+            Fees = 30,
+            Genres = new List<string>(),
+            Images = new List<string>(),
+            KindOfFilm = 0,
+            Name = RandomText,
+            Nominations = new List<string>(),
+            RelatedFilms = new List<string>(),
+            Release = DateTime.Today,
+            ReleaseType = 0,
+            Seasons = new List<CreateSeasonDto>(),
+            StartScreening = DateTime.Today,
+            Stuff = new List<string>(),
+            Tizers = new List<string>(),
+            Trailers = new List<string>()
+        };
+
+        return await _repo.Create(film);
+    }
+
+    async Task <string> CreatePerson()
+    {
+        Person p = new Person(RandomText, DateTime.Now, RandomText, RandomText, RandomText, 180);
+        await _mongoFixture.PersonCollection.InsertOneAsync(p);
+        return p.Id;
     }
 }

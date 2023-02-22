@@ -10,9 +10,11 @@ public class CensorRepositoryImpl : CensorRepository
 {
     FilterDefinition<Censor> FilterById(string id) => Builders<Censor>.Filter.Eq(cens => cens.Id, id);
     readonly IMongoCollection<Censor> _censorMongoRepo;
-    public CensorRepositoryImpl(IMongoCollection<Censor> censorMongoRepo)
+    IMongoCollection<Film> _filmsCol;
+    public CensorRepositoryImpl(IMongoCollection<Censor> censorMongoRepo, IMongoCollection<Film> filmsCol)
     {
         _censorMongoRepo = censorMongoRepo;
+        _filmsCol = filmsCol;
     }
     public async Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default) =>
         (await _censorMongoRepo.UpdateOneAsync(
@@ -65,11 +67,24 @@ public class CensorRepositoryImpl : CensorRepository
             cancellationToken: token
         )).FirstOrDefault().Adapt<CensorDto>();
 
-    public async Task<bool> SetFilmsTop(string id, List<string> films, CancellationToken token = default) =>
-        (await _censorMongoRepo.UpdateOneAsync(
+    public async Task<bool> SetFilmsTop(string id, List<string> films, CancellationToken token = default) {
+        foreach(var film in films)
+        {
+            var isFound = (await _filmsCol.FindAsync(
+                filter: Builders<Film>.Filter.Eq(f => f.Id, film),
+                cancellationToken: token
+            )).FirstOrDefault() is not null;
+            if(!isFound)
+                return false;
+        }
+
+        return (await _censorMongoRepo.UpdateOneAsync(
             filter: FilterById(id),
             update: Builders<Censor>.Update.Set(cens => cens.Films, films),
             cancellationToken: token
         )).ModifiedCount > 0;
+
+    }
+        
 
 }

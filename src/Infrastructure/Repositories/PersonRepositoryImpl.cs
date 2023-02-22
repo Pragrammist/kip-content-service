@@ -18,13 +18,6 @@ public class PersonRepositoryImpl : PersonRepository
     {
         _censorMongoRepo = censorMongoRepo;
     }
-    public async Task<bool> AddFilm(string id, string filmId, CancellationToken token = default) =>
-        (await _censorMongoRepo.UpdateOneAsync(
-            filter: FilterById(id),
-            update: Builders<Person>.Update.AddToSet(per => per.Films, filmId),
-            cancellationToken: token
-        ))
-        .ModifiedCount > 0;
     
     public async Task<bool> AddNomination(string id, string nomination, CancellationToken token = default) =>
         (await _censorMongoRepo.UpdateOneAsync(
@@ -47,12 +40,7 @@ public class PersonRepositoryImpl : PersonRepository
             cancellationToken: token
         )).DeletedCount > 0;
     
-    public async Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default) =>
-        (await _censorMongoRepo.UpdateOneAsync(
-            filter: FilterById(id),
-            update: Builders<Person>.Update.Pull(per => per.Films, filmId)
-        ))
-        .ModifiedCount > 0;
+    
 
     public async Task<bool> DeleteNomination(string id, string nomination, CancellationToken token = default) =>
         (await _censorMongoRepo.UpdateOneAsync(

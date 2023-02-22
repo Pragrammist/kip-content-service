@@ -25,7 +25,7 @@ public class EntityFilmReporitoryIntegrationTest
         MapsterConfiguration.ConfigureMapsterGlobally();
         _mongoFixture = mongoFixture;
         _entityRepo = new EntityFilmRepositoryImpl(_mongoFixture.FilmCollection);
-        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection);
+        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection);
     }
 
     [Fact]

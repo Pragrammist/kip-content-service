@@ -154,27 +154,6 @@ public class PersonRepositoryIntegrationTest
         res.Count().Should().BeGreaterThan(0);
     }
 
-    [Fact]
-    public async Task AddFilm()
-    {
-        var person = await CreatePerson();
-
-        var res = await _repo.AddFilm(person.Id, "someFilm");
-
-        res.Should().BeTrue();
-    }
-
-    [Fact]
-    public async Task DeleteFilm()
-    {
-        var person = await CreatePerson();
-        var filmId = "someFilm";
-        await _repo.AddFilm(person.Id, filmId);
-
-        var res = await _repo.DeleteFilm(person.Id, filmId);
-
-        res.Should().BeTrue();
-    }
 
     [Fact]
     public async Task AddNomination()

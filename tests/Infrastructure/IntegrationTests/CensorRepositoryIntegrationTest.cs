@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -6,6 +7,9 @@ using Xunit;
 using Core.Dtos;
 using System.Collections.Generic;
 using FluentAssertions;
+using Core;
+using MongoDB.Bson;
+
 namespace IntegrationTests;
 
 
@@ -17,14 +21,14 @@ public class CensorRepositoryIntegrationTest
     public CensorRepositoryIntegrationTest(MongoDbFixture mongoFixture)
     {
         _mongoFixture = mongoFixture;
-        _repo = new CensorRepositoryImpl(_mongoFixture.CensorCollection);
+        _repo = new CensorRepositoryImpl(_mongoFixture.CensorCollection, _mongoFixture.FilmCollection);
     } 
     
     [Fact]
     public async Task DeleteFilm()
     {
-        var censor  = await CreateFilmWithRandomName();
-        var filmdId = "someid";
+        var censor  = await CreateCensorWithRandomName();
+        var filmdId = await CreateFilmWithRandomName();
         await _repo.SetFilmsTop(censor.Id, new List<string>{filmdId});
 
         var res = await _repo.DeleteFilm(censor.Id, filmdId);
@@ -35,16 +39,35 @@ public class CensorRepositoryIntegrationTest
     [Fact]
     public async Task SetFilmsTop()
     {
-        var censor  = await CreateFilmWithRandomName();
+        var censor  = await CreateCensorWithRandomName();
+        var listOfFilm = await ListOfFilm();
 
-        var res = await _repo.SetFilmsTop(censor.Id, new List<string>{"топ"});
+        var res = await _repo.SetFilmsTop(censor.Id, listOfFilm);
 
-        res.Should().Be(true);
+        res.Should().BeTrue();
     }
+
+    [Fact]
+    public async Task SetFilmsTopWintNotExistsFilm()
+    {
+        var censor  = await CreateCensorWithRandomName();
+        var notExistsId = ObjectId.GenerateNewId().ToString();
+
+        var res = await _repo.SetFilmsTop(censor.Id, new List<string> {notExistsId});
+
+        res.Should().BeFalse();
+    }
+
+
+    async Task<List<string>> ListOfFilm() => new List<string>{
+        await CreateFilmWithRandomName(),
+    };
+    
+
     [Fact]
     public async Task Delete()
     {
-        var censor  = await CreateFilmWithRandomName();
+        var censor  = await CreateCensorWithRandomName();
 
         var res = await _repo.Delete(censor.Id);
 
@@ -53,7 +76,7 @@ public class CensorRepositoryIntegrationTest
     [Fact]
     public async Task Get()
     {
-        var censor  = await CreateFilmWithRandomName();
+        var censor  = await CreateCensorWithRandomName();
 
         var res = await _repo.Get(censor.Id);
         
@@ -62,7 +85,7 @@ public class CensorRepositoryIntegrationTest
     [Fact]
     public async Task GetMany()
     {
-        var censor  = await CreateFilmWithRandomName();
+        var censor  = await CreateCensorWithRandomName();
 
         var res = await _repo.Get();
 
@@ -72,7 +95,7 @@ public class CensorRepositoryIntegrationTest
     [Fact]
     public async Task ChangeName()
     {
-        var censor = await CreateFilmWithRandomName();
+        var censor = await CreateCensorWithRandomName();
         var newName = "NEW NAME";
 
         var res = await _repo.ChangeName(censor.Id, newName);
@@ -88,11 +111,20 @@ public class CensorRepositoryIntegrationTest
         censor.Should().NotBeNull();
     }
 
-    async Task <CensorDto> CreateFilmWithRandomName()
+    async Task <CensorDto> CreateCensorWithRandomName()
     {
         var rName = Path.GetRandomFileName();
         var censor = await _repo.Create(rName, films: new List<string>(){ "фильм1", "фильм2", "фильм3" });
         return censor;
     }
+    async Task<string> CreateFilmWithRandomName()
+    {
+        Film film = new Film(RandomText, RandomText, RandomText, RandomText);
 
+        await _mongoFixture.FilmCollection.InsertOneAsync(film);
+
+        return film.Id;
+        
+    }
+    string RandomText => Path.GetRandomFileName();
 }

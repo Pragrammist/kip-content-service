@@ -18,9 +18,7 @@ public interface PersonRepository
     Task<bool> Delete(string id, CancellationToken token = default);
 
 
-    Task<bool> AddFilm(string id, string filmId, CancellationToken token = default);
-
-    Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default);
+    
 
 
     Task<bool> AddNomination(string id, string nomination, CancellationToken token = default);

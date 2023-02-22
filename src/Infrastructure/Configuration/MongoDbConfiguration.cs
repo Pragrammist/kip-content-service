@@ -11,9 +11,9 @@ public static class MongoDbConfiguration
     public static void ConfigureMongoDbGlobally()
     {
         BsonMemberMap SetStringId<T>(BsonClassMap<T> map) => map.IdMemberMap.SetSerializer(new StringSerializer(BsonType.ObjectId)).SetIdGenerator(StringObjectIdGenerator.Instance);
-
+        
         BsonClassMap.RegisterClassMap<Censor>(map =>
-        {
+        {   
             map.AutoMap();
             SetStringId(map);
         });
