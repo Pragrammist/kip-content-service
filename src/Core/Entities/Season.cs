@@ -6,6 +6,9 @@ public class Season
     public Season(string banner, uint num){
         Banner = banner;
         Num = num;
+
+        if(string.IsNullOrEmpty(Banner))
+            throw new FieldIsNullOrEmptyException(nameof(Banner), nameof(Season));
     }
 
     public uint Num { get; set; }

@@ -6,6 +6,9 @@ public class Seria
     public Seria(uint num, string idFile){
         Num = num;
         IdFile = idFile;
+
+        if(string.IsNullOrEmpty(IdFile))
+            throw new FieldIsNullOrEmptyException(nameof(IdFile), nameof(Seria));
     }
 
     public uint Num { get; set; }

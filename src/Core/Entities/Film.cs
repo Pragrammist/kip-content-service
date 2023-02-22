@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 namespace Core;
 
 public class Film
@@ -24,9 +25,39 @@ public class Film
         StartScreening = startScreening;
         EndScreening = endScreening;
         Fees = fees;
+        CheckNullOrEmpty();
+        ValidateFieldData();
     }
 
 
+    void ValidateFieldData()
+    {
+        // if(IsFilm && IsReleas && Content is null)
+        //     throw new ContentIsNullException(IsFilm, IsReleas);
+        
+        // if (Duration is null && Content is not null)
+        //     throw new DurationIsNullException();
+
+        // if(IsSerial && IsReleas && Seasons.Count == 0)
+        //     throw new SeasonCountIsZeroException(IsSerial, IsReleas, Seasons.Count);
+        
+    }
+
+    void CheckNullOrEmpty()
+    {
+        if(string.IsNullOrEmpty(Banner))
+            throw new FieldIsNullOrEmptyException(nameof(Banner), nameof(Film));
+
+        if(string.IsNullOrEmpty(Name))
+            throw new FieldIsNullOrEmptyException(nameof(Name), nameof(Film));
+        
+        if(string.IsNullOrEmpty(Description))
+            throw new FieldIsNullOrEmptyException(nameof(Description), nameof(Film));
+        
+        if(string.IsNullOrEmpty(Country))
+            throw new FieldIsNullOrEmptyException(nameof(Country), nameof(Film));
+        
+    }
     public bool IsSerial => KindOfFilm == FilmType.SERIAL;
 
     public bool IsFilm => KindOfFilm == FilmType.FILM;
@@ -86,24 +117,74 @@ public class Film
 
     public uint NotInterestingCount { get; private set; }
 
+    List<string> _images = new List<string>();
+    public List<string> Images { get => _images; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Images), nameof(Film));
+        _images = value.ToList();
+    } } 
 
-    public List<string> Images { get; set; } = new List<string>();
 
-    public List<string> Stuff { get; set; } = new List<string>();
+    List<string> _stuff = new List<string>();
+    public List<string> Stuff { get => _stuff; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Stuff), nameof(Film));
+        _stuff = value.ToList();
+    } } 
 
-    public List<string> Articles { get; set; }  = new List<string>();
 
-    public List<string> Trailers { get; set; } = new List<string>();
+    List<string> _articles = new List<string>();
+    public List<string> Articles { get => _articles; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Articles), nameof(Film));
+        _articles = value.ToList();
+    } } 
 
-    public List<string> Tizers { get; set; }  = new List<string>();
 
-    public List<string> RelatedFilms { get; set; }  = new List<string>();
+    List<string> _trailers = new List<string>();
+    public List<string> Trailers { get => _trailers; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Trailers), nameof(Film));
+        _trailers = value.ToList();
+    } } 
 
-    public List<string> Genres { get; set; } = new List<string>();
 
-    public List<string> Nominations { get; set; } = new List<string>();
+    List<string> _tizers = new List<string>();
+    public List<string> Tizers { get => _tizers; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Tizers), nameof(Film));
+        _tizers = value.ToList();
+    } }  
 
-    public List<Season> Seasons { get; set; } = new List<Season>();
+
+    List<string> _relatedFilms = new List<string>();
+    public List<string> RelatedFilms { get => _relatedFilms; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(RelatedFilms), nameof(Film));
+        _relatedFilms = value.ToList();
+    } }  
+
+
+    List<string> _genres = new List<string>();
+    public List<string> Genres { get => _genres; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Genres), nameof(Film));
+        _genres = value.ToList();
+    } } 
+
+
+    List<string> _nominations = new List<string>();
+    public List<string> Nominations { get => _nominations; set {
+        if(value.Any(f => string.IsNullOrEmpty(f)))
+            throw new NullOrEmptyInnerCollectionException(nameof(Nominations), nameof(Film));
+        _nominations = value.ToList();
+    } } 
+
+    
+    List<Season> _seasons = new List<Season>();
+    public List<Season> Seasons { get => _seasons; set {
+        _seasons = value.ToList();
+    } } 
 
 
 
@@ -164,4 +245,28 @@ public class Film
     public static Film GetTestFilmWithDefaultValue() 
         => new Film("some banner", "some name", "some description", "some country");
     
+}
+
+public class ContentIsNullException : Exception
+{
+    public ContentIsNullException (bool isFilm, bool isReleas): base($"IsFilm is {isFilm} and IsReleas is {isReleas} so content must not be null")
+    {
+
+    }
+}
+
+public class DurationIsNullException : Exception
+{
+    public DurationIsNullException () : base($"Duration of film is null when content is initializate")
+    {
+
+    }
+}
+
+public class SeasonCountIsZeroException : Exception
+{
+    public SeasonCountIsZeroException(bool isSerial,  bool isReleas, int seasonCount) : base($"IsSerial is {isSerial} and IsReleas is {isReleas} SeasonCount is {seasonCount}")
+    {
+
+    }
 }
