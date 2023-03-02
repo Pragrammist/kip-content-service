@@ -11,9 +11,6 @@ public class Program
     {
         try
         {
-            MongoDbConfiguration.ConfigureMongoDbGlobally();
-            MapsterConfiguration.ConfigureMapsterGlobally();
-
             var logstashUrl = Environment.GetEnvironmentVariable("LOGSTASH_URL") ?? "http://localhost:8080";
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
@@ -49,11 +46,7 @@ public class Program
                             .AddFilmMongoDbCollection(filmsCollection)
                             .AddFilmSelectionMongoDbCollection(filmSelectionsCollection);
             
-            builder.Services.AddCensorRepository()
-                            .AddPersonRepository()
-                            .AddFilmRepositories()
-                            .AddFilmInteractor()
-                            .AddFilmSelectionRepository();
+            builder.Services.AddAppServices();
             
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer()

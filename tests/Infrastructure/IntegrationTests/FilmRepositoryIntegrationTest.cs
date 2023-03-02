@@ -21,15 +21,23 @@ namespace IntegrationTests;
 public class FilmRepositoryIntegrationTest
 {
     readonly MongoDbFixture _mongoFixture;
-    readonly FilmRepositoryImpl _repo;
+    readonly FilmRepositoryImpl _filmRepo;
+
+    readonly PersonRepositoryImpl _personRepo;
+
+    readonly FilmSelectionRepositoryImpl _selectionRepo;
+
+    readonly CensorRepositoryImpl _censorRepo;
 
     string RandomText => Path.GetRandomFileName();
     
     public FilmRepositoryIntegrationTest(MongoDbFixture mongoFixture)
     {
-        MapsterConfiguration.ConfigureMapsterGlobally();
         _mongoFixture = mongoFixture;
-        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection);
+        _filmRepo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection, _mongoFixture.CensorCollection, _mongoFixture.FilmSelectionCollection);
+        _selectionRepo = new FilmSelectionRepositoryImpl(_mongoFixture.FilmSelectionCollection, _mongoFixture.FilmCollection);
+        _personRepo = new PersonRepositoryImpl(_mongoFixture.PersonCollection, _mongoFixture.FilmCollection);
+        _censorRepo = new CensorRepositoryImpl(_mongoFixture.CensorCollection, _mongoFixture.FilmCollection);
     }
     
     [Fact]
@@ -37,7 +45,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddImage(film.Id, "someimage");
+        var res = await _filmRepo.AddImage(film.Id, "someimage");
 
         res.Should().BeTrue();
     }
@@ -47,9 +55,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var image = "someimage";
-        await _repo.AddImage(film.Id, image);
+        await _filmRepo.AddImage(film.Id, image);
         
-        var res = await _repo.DeleteImage(film.Id, image);
+        var res = await _filmRepo.DeleteImage(film.Id, image);
 
         res.Should().BeTrue();
     }
@@ -60,7 +68,7 @@ public class FilmRepositoryIntegrationTest
         var film = await CreateFilmWithRandomName();
         var personId = await CreatePerson();
 
-        var res = await _repo.AddPerson(film.Id, personId);
+        var res = await _filmRepo.AddPerson(film.Id, personId);
 
         res.Should().BeTrue();
     }
@@ -71,7 +79,7 @@ public class FilmRepositoryIntegrationTest
         var film = await CreateFilmWithRandomName();
         var personId = ObjectId.GenerateNewId().ToString();
 
-        var res = await _repo.AddPerson(film.Id, personId);
+        var res = await _filmRepo.AddPerson(film.Id, personId);
 
         res.Should().BeFalse();
     }
@@ -81,9 +89,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var personId = await CreatePerson();
-        var personIsAdded = await _repo.AddPerson(film.Id, personId);
+        var personIsAdded = await _filmRepo.AddPerson(film.Id, personId);
         
-        var res =  await _repo.DeletePerson(film.Id, personId);
+        var res =  await _filmRepo.DeletePerson(film.Id, personId);
 
         res.Should().BeTrue();
     }
@@ -93,7 +101,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddArticle(film.Id, "article");
+        var res = await _filmRepo.AddArticle(film.Id, "article");
 
         res.Should().BeTrue();
     }
@@ -103,9 +111,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var article = "article";
-        await _repo.AddArticle(film.Id, article);
+        await _filmRepo.AddArticle(film.Id, article);
         
-        var res = await _repo.DeleteArticle(film.Id, article);
+        var res = await _filmRepo.DeleteArticle(film.Id, article);
 
         res.Should().BeTrue();
     }
@@ -116,7 +124,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddTrailer(film.Id, "Trailer");
+        var res = await _filmRepo.AddTrailer(film.Id, "Trailer");
 
         res.Should().BeTrue();
     }
@@ -126,9 +134,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var trailer = "Trailer";
-        await _repo.AddTrailer(film.Id, trailer);
+        await _filmRepo.AddTrailer(film.Id, trailer);
         
-        var res = await _repo.DeleteTrailer(film.Id, trailer);
+        var res = await _filmRepo.DeleteTrailer(film.Id, trailer);
 
         res.Should().BeTrue();
     }
@@ -140,7 +148,7 @@ public class FilmRepositoryIntegrationTest
         var film = await CreateFilmWithRandomName();
         var relatedFilm = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddRelatedFilm(film.Id, relatedFilm.Id);
+        var res = await _filmRepo.AddRelatedFilm(film.Id, relatedFilm.Id);
 
         res.Should().BeTrue();
     }
@@ -151,7 +159,7 @@ public class FilmRepositoryIntegrationTest
         var film = await CreateFilmWithRandomName();
         var relatedFilm = ObjectId.GenerateNewId().ToString();
 
-        var res = await _repo.AddRelatedFilm(film.Id, relatedFilm);
+        var res = await _filmRepo.AddRelatedFilm(film.Id, relatedFilm);
 
         res.Should().BeFalse();
     }
@@ -161,9 +169,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var relatedFilmdId = (await CreateFilmWithRandomName()).Id;
-        var filmAdded = await _repo.AddRelatedFilm(film.Id, relatedFilmdId);
+        var filmAdded = await _filmRepo.AddRelatedFilm(film.Id, relatedFilmdId);
         
-        var res = await _repo.DeleteRelatedFilm(film.Id, relatedFilmdId);
+        var res = await _filmRepo.DeleteRelatedFilm(film.Id, relatedFilmdId);
 
         res.Should().BeTrue();
     }
@@ -175,7 +183,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddGenre(film.Id, "genre");
+        var res = await _filmRepo.AddGenre(film.Id, "genre");
 
         res.Should().BeTrue();
     }
@@ -185,9 +193,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var genre = "genre";
-        await _repo.AddGenre(film.Id, genre);
+        await _filmRepo.AddGenre(film.Id, genre);
         
-        var res = await _repo.DeleteGenre(film.Id, genre);
+        var res = await _filmRepo.DeleteGenre(film.Id, genre);
 
         res.Should().BeTrue();
     }
@@ -198,7 +206,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.AddNomination(film.Id, "Nomination");
+        var res = await _filmRepo.AddNomination(film.Id, "Nomination");
 
         res.Should().BeTrue();
     }
@@ -208,9 +216,9 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
         var nomination = "genre";
-        await _repo.AddNomination(film.Id, nomination);
+        await _filmRepo.AddNomination(film.Id, nomination);
         
-        var res = await _repo.DeleteNomination(film.Id, nomination);
+        var res = await _filmRepo.DeleteNomination(film.Id, nomination);
 
         res.Should().BeTrue();
     }
@@ -226,7 +234,7 @@ public class FilmRepositoryIntegrationTest
 
         };
 
-        var res = await _repo.UpdateSeasonAndSerias(film.Id, seasons);
+        var res = await _filmRepo.UpdateSeasonAndSerias(film.Id, seasons);
 
         res.Should().BeTrue();
     }
@@ -237,7 +245,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.UpdateShareCount(film.Id, 3);
+        var res = await _filmRepo.UpdateShareCount(film.Id, 3);
 
         res.Should().BeTrue();
     }
@@ -248,7 +256,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.UpdateWatchedCount(film.Id, 3);
+        var res = await _filmRepo.UpdateWatchedCount(film.Id, 3);
 
         res.Should().BeTrue();
     }
@@ -258,7 +266,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.UpdateViewCount(film.Id, 3);
+        var res = await _filmRepo.UpdateViewCount(film.Id, 3);
 
         res.Should().BeTrue();
     }
@@ -268,7 +276,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.UpdateNotInterestingCount(film.Id, 3);
+        var res = await _filmRepo.UpdateNotInterestingCount(film.Id, 3);
 
         res.Should().BeTrue();
     }
@@ -278,7 +286,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.UpdateScore(film.Id, 5, 1);
+        var res = await _filmRepo.UpdateScore(film.Id, 5, 1);
 
         res.Should().BeTrue();
     }
@@ -288,7 +296,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.UpdateWillWatchCount(film.Id, 3);
+        var res = await _filmRepo.UpdateWillWatchCount(film.Id, 3);
 
         res.Should().BeTrue();
     }
@@ -298,8 +306,71 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.Delete(film.Id);
+        var res = await _filmRepo.Delete(film.Id);
 
+        res.Should().BeTrue();
+    }
+    [Fact]
+    public async Task DeleteCheckRelatedFilm()
+    {
+        var film = await CreateFilmWithRandomName();
+        var relatedFilm = await CreateFilmWithRandomName();
+        await _filmRepo.AddRelatedFilm(film.Id, relatedFilm.Id);
+
+        var res = await _filmRepo.Delete(film.Id);
+        
+        var filmFromDb = await _filmRepo.Get(relatedFilm.Id) ?? throw new NullReferenceException("gotten film is null after updating");
+        var relatedFilmIsDeletedFromFilm = !filmFromDb.RelatedFilms.Contains(film.Id);
+
+        relatedFilmIsDeletedFromFilm.Should().BeTrue();
+        res.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteCheckPerson()
+    {
+        var film = await CreateFilmWithRandomName();
+        var personId = await CreatePerson();
+        await _filmRepo.AddPerson(film.Id, personId);
+
+        var res = await _filmRepo.Delete(film.Id);
+        
+        var person = await _personRepo.Get(personId) ?? throw new NullReferenceException("gotten person is null after updating");
+        var personIsNotContainsFilm = !person.Films.Contains(film.Id);
+
+        personIsNotContainsFilm.Should().BeTrue();
+        res.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteCheckCensor()
+    {
+        var film = await CreateFilmWithRandomName();
+        var censor = await _censorRepo.Create(RandomText, films: new List<string> { film.Id }) ?? throw new NullReferenceException("gotten censor is null when creating");
+        
+
+        var res = await _filmRepo.Delete(film.Id);
+        
+        var updatedCensor = await _censorRepo.Get(censor.Id) ?? throw new NullReferenceException("gotten person is null after updating");
+        var personIsNotContainsFilm = !updatedCensor.Films.Contains(film.Id);
+
+        personIsNotContainsFilm.Should().BeTrue();
+        res.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteCheckSelection()
+    {
+        var film = await CreateFilmWithRandomName();
+        var selection = await _selectionRepo.Create(RandomText, films: new List<string> { film.Id }) ?? throw new NullReferenceException("gotten selection is null when creating");
+        
+
+        var res = await _filmRepo.Delete(film.Id);
+        
+        var updatedSelection = await _selectionRepo.Get(selection.Id) ?? throw new NullReferenceException("gotten person is null after updating");
+        var personIsNotContainsFilm = !updatedSelection.Films.Contains(film.Id);
+
+        personIsNotContainsFilm.Should().BeTrue();
         res.Should().BeTrue();
     }
 
@@ -318,7 +389,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.Get(film.Id);
+        var res = await _filmRepo.Get(film.Id);
 
         res.Should().NotBeNull();
     }
@@ -328,7 +399,7 @@ public class FilmRepositoryIntegrationTest
     {
         var film = await CreateFilmWithRandomName();
 
-        var res = await _repo.Get();
+        var res = await _filmRepo.Get();
 
         res.Count().Should().BeGreaterThan(0);
     }
@@ -342,7 +413,7 @@ public class FilmRepositoryIntegrationTest
             AgeLimit = 1
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -356,7 +427,7 @@ public class FilmRepositoryIntegrationTest
             Banner = RandomText
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -370,7 +441,7 @@ public class FilmRepositoryIntegrationTest
             Name = RandomText
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -384,7 +455,7 @@ public class FilmRepositoryIntegrationTest
             Description = RandomText
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -398,7 +469,7 @@ public class FilmRepositoryIntegrationTest
             Country = RandomText
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -412,7 +483,7 @@ public class FilmRepositoryIntegrationTest
             KindOfFilm = 1
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -425,7 +496,7 @@ public class FilmRepositoryIntegrationTest
             ReleaseType = 1
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -439,7 +510,7 @@ public class FilmRepositoryIntegrationTest
             Duration = TimeSpan.FromDays(1)
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -453,7 +524,7 @@ public class FilmRepositoryIntegrationTest
             Release = DateTime.MaxValue
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -467,7 +538,7 @@ public class FilmRepositoryIntegrationTest
             StartScreening = DateTime.MaxValue
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -481,7 +552,7 @@ public class FilmRepositoryIntegrationTest
             EndScreening = DateTime.MaxValue
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -494,7 +565,7 @@ public class FilmRepositoryIntegrationTest
             Content = RandomText
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -508,7 +579,7 @@ public class FilmRepositoryIntegrationTest
             Fees = 226
         };
 
-        var res = await _repo.UpdateData(film.Id, updData);        
+        var res = await _filmRepo.UpdateData(film.Id, updData);        
 
         res.Should().BeTrue();
     }
@@ -541,7 +612,7 @@ public class FilmRepositoryIntegrationTest
             Trailers = new List<string>()
         };
 
-        return await _repo.Create(film);
+        return await _filmRepo.Create(film);
     }
 
     async Task <string> CreatePerson()

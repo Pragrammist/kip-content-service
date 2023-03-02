@@ -9,6 +9,8 @@ using Core.Dtos.CreatePersonDtos;
 using Core.Dtos.UpdatePersonDtos;
 using System.Collections.Generic;
 using FluentAssertions;
+using Core.Dtos.CreateFilmDtos;
+using Infrastructure.Configuration;
 
 namespace IntegrationTests;
 
@@ -16,11 +18,14 @@ namespace IntegrationTests;
 public class PersonRepositoryIntegrationTest
 {
     readonly MongoDbFixture _mongoFixture;
-    readonly PersonRepositoryImpl _repo;
+    readonly PersonRepositoryImpl _personRepo;
+    readonly FilmRepositoryImpl _filmRepo;
+
     public PersonRepositoryIntegrationTest(MongoDbFixture mongoFixture)
     {
         _mongoFixture = mongoFixture;
-        _repo = new PersonRepositoryImpl(_mongoFixture.PersonCollection);
+        _personRepo = new PersonRepositoryImpl(_mongoFixture.PersonCollection, _mongoFixture.FilmCollection);
+        _filmRepo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection, _mongoFixture.CensorCollection, _mongoFixture.FilmSelectionCollection);
     } 
 
     [Fact]
@@ -31,15 +36,39 @@ public class PersonRepositoryIntegrationTest
         res.Should().NotBeNull();
     }
 
-
     [Fact]
     public async Task Delete()
     {
         var person = await CreatePerson();
 
-        var res = await _repo.Delete(person.Id);
+        var personIsDeleted = await _personRepo.Delete(person.Id);
 
-        res.Should().BeTrue();
+        personIsDeleted.Should().BeTrue();
+    }
+
+    [Fact]
+    public async Task DeleteCheckFilm()
+    {
+        var person = await CreatePerson();
+        CreateFilmDto createFilmDto = new CreateFilmDto {
+            AgeLimit = 12,
+            Banner = RandomText,
+            Content = RandomText,
+            Country = RandomText,
+            Description = RandomText,
+            Duration = TimeSpan.Zero,
+            Fees = 1232,
+            Name = RandomText
+        };
+        var addedFilmDto = await _filmRepo.Create(createFilmDto);
+        var filmIsAdded = await _filmRepo.AddPerson(addedFilmDto.Id, person.Id);
+
+        var personIsDeleted = await _personRepo.Delete(person.Id);
+
+        var updatedFilmDto = await _filmRepo.Get(addedFilmDto.Id) ?? throw new NullReferenceException("film is not found when it get after update");
+        var personIdIsDeleted = !updatedFilmDto.Stuff.Contains(person.Id);
+        personIdIsDeleted.Should().BeTrue();
+        personIsDeleted.Should().BeTrue();
     }
 
     [Fact]
@@ -47,7 +76,7 @@ public class PersonRepositoryIntegrationTest
     {
         var person = await CreatePerson();
         
-        var res = await _repo.Get(person.Id);
+        var res = await _personRepo.Get(person.Id);
 
         res.Should().NotBeNull();
     }
@@ -60,7 +89,7 @@ public class PersonRepositoryIntegrationTest
             Birthday = DateTime.MaxValue,
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -73,7 +102,7 @@ public class PersonRepositoryIntegrationTest
             BirthPlace = RandomText
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -86,7 +115,7 @@ public class PersonRepositoryIntegrationTest
             Career = RandomText
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -99,7 +128,7 @@ public class PersonRepositoryIntegrationTest
             Height = 10
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -112,7 +141,7 @@ public class PersonRepositoryIntegrationTest
             KindOfPerson = 1
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -125,7 +154,7 @@ public class PersonRepositoryIntegrationTest
             Name = RandomText
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -139,7 +168,7 @@ public class PersonRepositoryIntegrationTest
             Photo = RandomText
         };
 
-        var res = await _repo.UpdateData(person.Id, updateData);
+        var res = await _personRepo.UpdateData(person.Id, updateData);
 
         res.Should().BeTrue();
     }
@@ -149,7 +178,7 @@ public class PersonRepositoryIntegrationTest
     {
         var person = await CreatePerson();
         
-        var res = await _repo.Get();
+        var res = await _personRepo.Get();
 
         res.Count().Should().BeGreaterThan(0);
     }
@@ -160,7 +189,7 @@ public class PersonRepositoryIntegrationTest
     {
         var person = await CreatePerson();
 
-        var res = await _repo.AddNomination(person.Id, "nomination");
+        var res = await _personRepo.AddNomination(person.Id, "nomination");
 
         res.Should().BeTrue();
     }
@@ -170,9 +199,9 @@ public class PersonRepositoryIntegrationTest
     {
         var person = await CreatePerson();
         var nomination = "someNomination";
-        await _repo.AddNomination(person.Id, nomination);
+        await _personRepo.AddNomination(person.Id, nomination);
 
-        var res = await _repo.DeleteNomination(person.Id, nomination);
+        var res = await _personRepo.DeleteNomination(person.Id, nomination);
 
         res.Should().BeTrue();
     }
@@ -190,7 +219,7 @@ public class PersonRepositoryIntegrationTest
             Nominations = new List<string>() {RandomText, RandomText, RandomText},
             Photo = RandomText
         };
-        var res = await _repo.Create(p);
+        var res = await _personRepo.Create(p);
         return res;
     }
     string RandomText => Path.GetRandomFileName();

@@ -27,6 +27,7 @@ public class MongoDbFixture : IDisposable
     public MongoDbFixture()
     {
         MongoDbConfiguration.ConfigureMongoDbGlobally();
+        MapsterConfiguration.ConfigureMapsterGlobally();
         Client = new MongoClient("mongodb://localhost:27017");
         Db = Client.GetDatabase(DB_NAME);
         CensorCollection = Db.GetCollection<Censor>(CENSOR_COLECTION_NAME);

@@ -6,8 +6,11 @@ namespace Infrastructure.Configuration;
 
 public static class MongoDbExtensions
 {
+
     public static IServiceCollection AddMongoDb(this IServiceCollection services, string connection, string dbName)
     {
+        MongoDbConfiguration.ConfigureMongoDbGlobally();
+
         services.AddSingleton<IMongoClient>(p =>
         {
             var mongoClient = new MongoClient(connection);

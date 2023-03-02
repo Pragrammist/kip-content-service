@@ -22,10 +22,9 @@ public class EntityFilmReporitoryIntegrationTest
     
     public EntityFilmReporitoryIntegrationTest(MongoDbFixture mongoFixture)
     {
-        MapsterConfiguration.ConfigureMapsterGlobally();
         _mongoFixture = mongoFixture;
         _entityRepo = new EntityFilmRepositoryImpl(_mongoFixture.FilmCollection);
-        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection);
+        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection, _mongoFixture.CensorCollection, _mongoFixture.FilmSelectionCollection);
     }
 
     [Fact]

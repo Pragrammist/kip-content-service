@@ -23,7 +23,7 @@ public class FilmInteractorIntegrationTest
     public FilmInteractorIntegrationTest(MongoDbFixture mongoFixture)
     {
         _mongoFixture = mongoFixture;
-        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection);
+        _repo = new FilmRepositoryImpl(_mongoFixture.FilmCollection, _mongoFixture.PersonCollection, _mongoFixture.CensorCollection, _mongoFixture.FilmSelectionCollection);
 
         _entityRepo = new EntityFilmRepositoryImpl(_mongoFixture.FilmCollection);
         _filmInteractor = new FilmInteractor(_repo, _entityRepo);

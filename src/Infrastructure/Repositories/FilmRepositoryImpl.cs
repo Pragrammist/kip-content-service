@@ -15,11 +15,20 @@ public class FilmRepositoryImpl : FilmRepository
 
     FilterDefinition<Person> PersonFilterId(string id) => Builders<Person>.Filter.Eq(f => f.Id, id);
     readonly IMongoCollection<Film> _filmsCol;
-    IMongoCollection<Person> _personsCol;
-    public FilmRepositoryImpl(IMongoCollection<Film> censorMongoRepo, IMongoCollection<Person> personsCol)
+    readonly IMongoCollection<Person> _personsCol;
+    readonly IMongoCollection<FilmSelection> _selectionsCol;
+    readonly IMongoCollection<Censor> _censorsCol;
+    public FilmRepositoryImpl(
+        IMongoCollection<Film> filmCol, 
+        IMongoCollection<Person> personsCol,
+        IMongoCollection<Censor> censorsCol,
+        IMongoCollection<FilmSelection> selectionsCol
+    )
     {
-        _filmsCol = censorMongoRepo;
+        _filmsCol = filmCol;
         _personsCol = personsCol;
+        _selectionsCol = selectionsCol;
+        _censorsCol = censorsCol;
     }
 
     public async Task<FilmDto> Create(CreateFilmDto film, CancellationToken token = default) 
@@ -109,12 +118,65 @@ public class FilmRepositoryImpl : FilmRepository
     }
     
 
-    public async Task<bool> Delete(string id, CancellationToken token = default) =>
-        (await _filmsCol.DeleteOneAsync(
+    public async Task<bool> Delete(string id, CancellationToken token = default) 
+    {
+        var isDeleted = (await _filmsCol.DeleteOneAsync(
             filter: FilterById(id),
             cancellationToken: token
         )).DeletedCount > 0;
 
+        if(!isDeleted)
+            return false;
+        
+        var isAllCleared = await ClearReferencesWhenDelete(id, token);
+
+        return isDeleted && isAllCleared;
+    }
+        
+    async Task<bool> ClearReferencesWhenDelete(string id, CancellationToken token)
+    {
+        var deleteFromRelatedFilmRes = await _filmsCol.UpdateManyAsync(
+            filter: Builders<Film>.Filter.AnyEq(f => f.RelatedFilms, id),
+            update: Builders<Film>.Update.Pull(f => f.RelatedFilms, id),
+            cancellationToken: token
+        );
+
+        var filmIsDeletedFromRelatedFilm = deleteFromRelatedFilmRes.ModifiedCount > 0 && 
+            deleteFromRelatedFilmRes.MatchedCount > 0  || 
+            deleteFromRelatedFilmRes.MatchedCount == 0;
+
+        var deletedFromCensorRes = await _censorsCol.UpdateManyAsync(
+            filter: Builders<Censor>.Filter.AnyEq(f => f.Films, id),
+            update: Builders<Censor>.Update.Pull(f => f.Films, id),
+            cancellationToken: token
+        );
+        var filmIsDeletedFromCensor = deletedFromCensorRes.ModifiedCount > 0 && 
+            deletedFromCensorRes.MatchedCount > 0  || 
+            deletedFromCensorRes.MatchedCount == 0;
+
+        var deletedFromSelectionRes = await _selectionsCol.UpdateManyAsync(
+            filter: Builders<FilmSelection>.Filter.AnyEq(f => f.Films, id),
+            update: Builders<FilmSelection>.Update.Pull(f => f.Films, id),
+            cancellationToken: token
+        );
+        var filmIsDeletedFromSelection = deletedFromSelectionRes.ModifiedCount > 0 && 
+            deletedFromSelectionRes.MatchedCount > 0  || 
+            deletedFromSelectionRes.MatchedCount == 0;
+
+        var deletedFromPersonRes = await _personsCol.UpdateManyAsync(
+            filter: Builders<Person>.Filter.AnyEq(f => f.Films, id),
+            update: Builders<Person>.Update.Pull(f => f.Films, id),
+            cancellationToken: token
+        );
+        var filmIsDeletedFromPerson = deletedFromPersonRes.ModifiedCount > 0 && 
+            deletedFromPersonRes.MatchedCount > 0  || 
+            deletedFromPersonRes.MatchedCount == 0;
+
+        return filmIsDeletedFromRelatedFilm || 
+                filmIsDeletedFromCensor ||
+                filmIsDeletedFromSelection ||
+                filmIsDeletedFromPerson;
+    }
 
     public async Task<bool> AddImage(string id, string image, CancellationToken token = default) =>
         (await _filmsCol.UpdateOneAsync(

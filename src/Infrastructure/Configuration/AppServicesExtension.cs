@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Core.Repositories;
 using Core.Interactors;
 using Infrastructure.Repositories;
@@ -22,4 +23,16 @@ public static class AppServicesExtension
 
     public static IServiceCollection AddFilmInteractor(this IServiceCollection services)
         => services.AddTransient<FilmInteractor>();
+
+    public static IServiceCollection AddAppServices(this IServiceCollection services)
+    {
+        MapsterConfiguration.ConfigureMapsterGlobally();
+        services.AddCensorRepository()
+                   .AddPersonRepository()
+                   .AddFilmRepositories()
+                   .AddFilmSelectionRepository()
+                   .AddFilmInteractor();
+        return services;
+    }
+        
 }
