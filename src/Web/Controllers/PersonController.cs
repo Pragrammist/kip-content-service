@@ -55,8 +55,8 @@ public class PersonController : ControllerBase
     [HttpDelete("{personId}")]
     public async Task<IActionResult> Delete(string personId, CancellationToken token)
     {
-        await _personRepo.Delete(personId, token);
-        return Ok();
+        var isSuccess = await _personRepo.Delete(personId, token);
+        return isSuccess ? Ok() : BadRequest();
     }
     
     /// <summary>
@@ -115,11 +115,11 @@ public class PersonController : ControllerBase
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
     /// <response code="404">Не нашел персону</response>
-    [HttpPut("nomination/{personId}/{nomination}")]
+    [HttpPut("nominations/{personId}/{nomination}")]
     public async Task<IActionResult> AddNomination(string personId, string nomination, CancellationToken token)
     {
-        await _personRepo.AddNomination(personId, nomination, token);
-        return Ok();
+        var iSsuccess = await _personRepo.AddNomination(personId, nomination, token);
+        return iSsuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -131,41 +131,10 @@ public class PersonController : ControllerBase
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
     /// <response code="404">Не нашел персону</response>
-    [HttpDelete("nomination/{personId}/{nomination}")]
+    [HttpPut("nominations/delete/{personId}/{nomination}")]
     public async Task<IActionResult> DeleteNomination(string personId, string nomination, CancellationToken token)
     {
-        await _personRepo.DeleteNomination(personId, nomination, token);
-        return Ok();
+        var iSsuccess = await _personRepo.DeleteNomination(personId, nomination, token);
+        return iSsuccess ? Ok() : BadRequest();
     }
-
-    // / <summary>
-    // / Добавляет фильм для персоны, в котором принимал учавствие
-    // / </summary>
-    // / <param name="personId">айди персоны</param>
-    // / <param name="filmId">айди фильма</param>
-    // / <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
-    // / <response code="200">Все хорошо. Операция была произведена успешно</response>
-    // / <response code="400">Не прошло валидацию</response>
-    // / <response code="404">Не нашел персону</response>
-    // [HttpPut("film/{personId}/{filmId}")]
-    // public async Task<IActionResult> AddFilm(string personId, string filmId, CancellationToken token)
-    // {
-    //     await _personRepo.AddFilm(personId, filmId, token);
-    //     return Ok();
-    // }
-    // / <summary>
-    // / Убирает фильм у персоны, в котором принимал учавствие
-    // / </summary>
-    // / <param name="personId">айди персоны</param>
-    // / <param name="filmId">айди фильма</param>
-    // / <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
-    // / <response code="200">Все хорошо. Операция была произведена успешно</response>
-    // / <response code="400">Не прошло валидацию</response>
-    // / <response code="404">Не нашел персону</response>
-    // [HttpDelete("film/{personId}/{filmId}")]
-    // public async Task<IActionResult> DeleteFilm(string personId, string filmId, CancellationToken token)
-    // {
-    //     await _personRepo.DeleteFilm(personId, filmId, token);
-    //     return Ok();
-    // }
 }

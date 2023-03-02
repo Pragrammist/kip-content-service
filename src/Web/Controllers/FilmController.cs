@@ -11,7 +11,6 @@ namespace Web.Controllers;
 [Route("film")]
 public class FilmController : ControllerBase
 {
-    
     readonly FilmRepository _filmRepository;
     readonly FilmInteractor _interactor;
     public FilmController(FilmRepository filmRepository, FilmInteractor interactor)
@@ -122,39 +121,7 @@ public class FilmController : ControllerBase
             return BadRequest();
     }
 
-    /// <summary>
-    /// Увеличивает счетчик "неинтересно" на 1 единицу.
-    /// Нет проверки на уникальность того, кто увеличивает это счетчик.
-    /// Поэтому метод не для админки
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("notinteresting/{filmId}")]
-    public async Task<IActionResult> IncrNotInteresting(string filmId, CancellationToken token)
-    {
-        await _interactor.IncrNotInterestingCount(filmId, token);
-
-        return Ok();
-    }
-
-    /// <summary>
-    /// Уменьшает счетчик "неинтересно" на 1 единицу.
-    /// Нет проверки на уникальность того, кто уменьшает это счетчик.
-    /// Поэтому метод не для админки
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("interesting/{filmId}")]
-    public async Task<IActionResult> DecrNotInteresting(string filmId, CancellationToken token)
-    {
-        await _interactor.DecrNotInterestingCount(filmId, token);
-        
-        return Ok();
-    }
+    
 
 
     /// <summary>
@@ -169,46 +136,13 @@ public class FilmController : ControllerBase
     [HttpPut("view/{filmId}")]
     public async Task<IActionResult> IncrViewsCount(string filmId, CancellationToken token)
     {
-        await _interactor.IncrViewsCount(filmId, token);
+        var isSuccess = await _interactor.IncrViewsCount(filmId, token);
         
-        return Ok();
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
-    /// <summary>
-    /// Увеличивает счетчик "буду смотреть" на 1 единицу.
-    /// Нет проверки на уникальность того, кто уменьшает это счетчик.
-    /// Поэтому метод не для админки.
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("willwatch/{filmId}")]
-    public async Task<IActionResult> IncrWillWatchCount(string filmId, CancellationToken token)
-    {
-        await _interactor.IncrWillWatchCount(filmId, token);
-        
-        return Ok();
-    }
-
-
-    /// <summary>
-    /// Уменьшает счетчик "буду смотреть" на 1 единицу.
-    /// Нет проверки на уникальность того, кто уменьшает это счетчик.
-    /// Поэтому метод не для админки.
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("willnotwatch/{filmId}")]
-    public async Task<IActionResult> DecrWillWatchCount(string filmId, CancellationToken token)
-    {
-        await _interactor.DecrWillWatchCount(filmId, token);
-        
-        return Ok();
-    }
+   
 
 
     /// <summary>
@@ -222,70 +156,15 @@ public class FilmController : ControllerBase
     [HttpPut("share/{filmId}")]
     public async Task<IActionResult> IncrShareCount(string filmId, CancellationToken token)
     {
-        await _interactor.IncrShareCount(filmId, token);
+        var isSuccess = await _interactor.IncrShareCount(filmId, token);
         
-        return Ok();
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
-    /// <summary>
-    /// Увеличивает счетчик "просмотренно" на 1 единицу.
-    /// Нет проверки на уникальность того, кто уменьшает это счетчик.
-    /// Поэтому метод не для админки.
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("watched/{filmId}")]
-    public async Task<IActionResult> IncrWatchedCount(string filmId, CancellationToken token)
-    {
-        await _interactor.IncrWatchedCount(filmId, token);
-        
-        return Ok();
-    }
+    
 
-    /// <summary>
-    /// Уменьшает счетчик "просмотренно" на 1 единицу.
-    /// Нет проверки на уникальность того, кто уменьшает это счетчик.
-    /// Метод не для админки.
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("unwatched/{filmId}")]
-    public async Task<IActionResult> DecrWatchedCount(string filmId, CancellationToken token)
-    {
-        await _interactor.DecrWatchedCount(filmId, token);
-        
-        return Ok();
-    }
-
-
-    /// <summary>
-    /// Записывает оценку пользователя, увеличивая счетчик количество оценок
-    /// Нет проверки на уникальность того, кто оцнивает
-    /// Метод не для админки.
-    /// </summary>
-    /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    /// <param name="filmId">айди фильма</param>
-    /// <param name="score">оценка пользоваетля</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Айди не найдено</response>
-    [HttpPut("score/{filmId}/{score}")]
-    public async Task<IActionResult> Score(string filmId, uint score, CancellationToken token)
-    {
-        await _interactor.AddScore(filmId, score, token);
-        
-        return Ok();
-    }
-
-    // [HttpPut("unscore/{filmId}/{score}")]
-    // public IActionResult UnScore(string filmId, double score)
-    // {
-    //     return new ObjectResult("I AM OBJECT");
-    // }
+    
 
 
 
@@ -301,8 +180,8 @@ public class FilmController : ControllerBase
     [HttpPut("images/{filmId}/{image}")]
     public async Task<IActionResult> AddImage(string filmId, string image, CancellationToken token)
     {
-        await _filmRepository.AddImage(filmId, image, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddImage(filmId, image, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -313,11 +192,11 @@ public class FilmController : ControllerBase
     /// <param name="image">айди фотографии</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("images/{filmId}/{image}")]
+    [HttpPut("images/delete/{filmId}/{image}")]
     public async Task<IActionResult> DeleteImage(string filmId, string image, CancellationToken token)
     {
-        await _filmRepository.DeleteImage(filmId, image, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteImage(filmId, image, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -329,10 +208,10 @@ public class FilmController : ControllerBase
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
     [HttpPut("stuff/{filmId}/{personId}")]
-    public async Task<IActionResult> AddStuff(string filmId, string personId, CancellationToken token)
+    public async Task<IActionResult> AddPerson(string filmId, string personId, CancellationToken token)
     {
-        await _filmRepository.AddPerson(filmId, personId, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddPerson(filmId, personId, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -343,11 +222,11 @@ public class FilmController : ControllerBase
     /// <param name="personId">айди персоны</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("stuff/{filmId}/{person}")]
-    public async Task<IActionResult> DeleteStuff(string filmId, string personId, CancellationToken token)
+    [HttpPut("stuff/delete/{filmId}/{personId}")]
+    public async Task<IActionResult> DeletePerson(string filmId, string personId, CancellationToken token)
     {
-        await _filmRepository.DeletePerson(filmId, personId, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeletePerson(filmId, personId, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -362,8 +241,8 @@ public class FilmController : ControllerBase
     [HttpPut("articles/{filmId}/{article}")]
     public async Task<IActionResult> AddArticle(string filmId, string article, CancellationToken token)
     {
-        await _filmRepository.AddArticle(filmId, article, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddArticle(filmId, article, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -375,11 +254,11 @@ public class FilmController : ControllerBase
     /// <param name="article">ссылка на статью</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("articles/{filmId}/{article}")]
+    [HttpPut("articles/delete/{filmId}/{article}")]
     public async Task<IActionResult> DeleteArticle(string filmId, string article, CancellationToken token)
     {
-        await _filmRepository.DeleteArticle(filmId, article, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteArticle(filmId, article, token);
+        return isSuccess ? Ok() : BadRequest();
     }
     
 
@@ -394,8 +273,8 @@ public class FilmController : ControllerBase
     [HttpPut("trailers/{filmId}/{trailer}")]
     public async Task<IActionResult> AddTrailer(string filmId, string trailer, CancellationToken token)
     {
-        await _filmRepository.AddTrailer(filmId, trailer, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddTrailer(filmId, trailer, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -407,11 +286,11 @@ public class FilmController : ControllerBase
     /// <param name="trailer">айди трейлера</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("trailers/{filmId}/{trailer}")]
+    [HttpPut("trailers/delete/{filmId}/{trailer}")]
     public async Task<IActionResult> DeleteTrailer(string filmId, string trailer, CancellationToken token)
     {
-        await _filmRepository.DeleteTrailer(filmId, trailer, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteTrailer(filmId, trailer, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -425,8 +304,8 @@ public class FilmController : ControllerBase
     [HttpPut("tizers/{filmId}/{tizer}")]
     public async Task<IActionResult> AddTizer(string filmId, string tizer, CancellationToken token)
     {
-        await _filmRepository.AddTizer(filmId, tizer, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddTizer(filmId, tizer, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -437,11 +316,11 @@ public class FilmController : ControllerBase
     /// <param name="tizer">айди тизер</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("tizers/{filmId}/{tizer}")]
+    [HttpPut("tizers/delete/{filmId}/{tizer}")]
     public async Task<IActionResult> DeleteTizer(string filmId, string tizer, CancellationToken token)
     {
-        await _filmRepository.DeleteTizer(filmId, tizer, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteTizer(filmId, tizer, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -456,8 +335,8 @@ public class FilmController : ControllerBase
     [HttpPut("relatefilms/{filmId}/{relateFilmId}")]
     public async Task<IActionResult> AddRelatedFilm(string filmId, string relateFilmId, CancellationToken token)
     {
-        await _filmRepository.AddRelatedFilm(filmId, relateFilmId, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddRelatedFilm(filmId, relateFilmId, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -469,11 +348,11 @@ public class FilmController : ControllerBase
     /// <param name="relateFilmId">айди фильма</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("relatefilms/{filmId}/{relateFilmId}")]
+    [HttpPut("relatefilms/delete/{filmId}/{relateFilmId}")]
     public async Task<IActionResult> DeleteRelatedFilm(string filmId, string relateFilmId, CancellationToken token)
     {
-        await _filmRepository.DeleteRelatedFilm(filmId, relateFilmId, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteRelatedFilm(filmId, relateFilmId, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -488,8 +367,8 @@ public class FilmController : ControllerBase
     [HttpPut("nominations/{filmId}/{nomination}")]
     public async Task<IActionResult> AddNomination(string filmId, string nomination, CancellationToken token)
     {
-        await _filmRepository.AddNomination(filmId, nomination, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddNomination(filmId, nomination, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -501,11 +380,11 @@ public class FilmController : ControllerBase
     /// <param name="nomination">номинация</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("nominations/{filmId}/{nomination}")]
+    [HttpPut("nominations/delete/{filmId}/{nomination}")]
     public async Task<IActionResult> DeleteNomination(string filmId, string nomination, CancellationToken token)
     {
-        await _filmRepository.DeleteNomination(filmId, nomination, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteNomination(filmId, nomination, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
@@ -520,73 +399,12 @@ public class FilmController : ControllerBase
     [HttpPut("seasons/{filmId}")]
     public async Task<IActionResult> UpdateSeasons(string filmId, List<UpdateSeasonDto> newSeasons, CancellationToken token)
     {
-        await _filmRepository.UpdateSeasonAndSerias(filmId, newSeasons, token);
-        return Ok();
+        var isSuccess = await _filmRepository.UpdateSeasonAndSerias(filmId, newSeasons, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
 
-    // /// <summary>
-    // /// Удаляет сезон
-    // /// </summary>
-    // /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    // /// <param name="filmId">айди фильма</param>
-    // /// <param name="num">номер</param>
-    // /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    // /// <response code="404">Айди не найдено</response>
-    // [HttpDelete("seasons/{filmId}/{num}")]
-    // public async Task<IActionResult> DeleteSeason(string filmId, uint num, CancellationToken token)
-    // {
-    //     return new ObjectResult("I AM OBJECT");
-    // }
-
-
-    // /// <summary>
-    // /// Добавляет серию к сезону
-    // /// </summary>
-    // /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    // /// <param name="filmId">айди фильма</param>
-    // /// <param name="num">номер</param>
-    // /// <param name="file">айди файла</param>
-    // /// <param name="season">номер</param>
-    // /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    // /// <response code="404">Айди не найдено</response>
-    // [HttpPut("serias/{filmId}/{season}/{num}/{file}")]
-    // public async Task<IActionResult> AddSeria(string filmId, uint num, string file, uint season, CancellationToken token)
-    // {
-    //     return new ObjectResult("I AM OBJECT");
-    // }
-
-    // /// <summary>
-    // /// Удаляет серию из сезона
-    // /// </summary>
-    // /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    // /// <param name="filmId">айди фильма</param>
-    // /// <param name="num">номер</param>
-    // /// <param name="season">номер</param>
-    // /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    // /// <response code="404">Айди не найдено</response>
-    // [HttpDelete("serias/{filmId}/{season}/{num}")]
-    // public async Task<IActionResult> DeleteSeria(string filmId, uint num, uint season, CancellationToken token)
-    // {
-    //     return new ObjectResult("I AM OBJECT");
-    // }
-
-
-    // /// <summary>
-    // /// Добавляет несколько сезонов с сериями сразу. 
-    // /// </summary>
-    // /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
-    // /// <remark>
-    // /// 
-    // /// </remark>
-    // /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    // /// <response code="404">Айди не найдено</response>    
-    // [HttpPut("seasons/{filmId}")]
-    // public async Task<IActionResult> AddSeasonsAndSerias(CancellationToken token)
-    // {
-    //     return new ObjectResult("I AM OBJECT");
-    // }
-
+   
 
     /// <summary>
     /// Добавляет жанр к фильму
@@ -599,8 +417,8 @@ public class FilmController : ControllerBase
     [HttpPut("genres/{filmId}/{genre}")]
     public async Task<IActionResult> AddGenre(string filmId, string genre, CancellationToken token)
     {
-        await _filmRepository.AddGenre(filmId, genre, token);
-        return Ok();
+        var isSuccess = await _filmRepository.AddGenre(filmId, genre, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 
     /// <summary>
@@ -611,10 +429,10 @@ public class FilmController : ControllerBase
     /// <param name="genre">жанр</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="404">Айди не найдено</response>
-    [HttpDelete("genres/{filmId}/{genre}")]
+    [HttpPut("genres/delete/{filmId}/{genre}")]
     public async Task<IActionResult> DeleteGenre(string filmId, string genre, CancellationToken token)
     {
-        await _filmRepository.DeleteGenre(filmId, genre, token);
-        return Ok();
+        var isSuccess = await _filmRepository.DeleteGenre(filmId, genre, token);
+        return isSuccess ? Ok() : BadRequest();
     }
 }

@@ -4,7 +4,7 @@ using Core.Repositories;
 namespace Web.Controllers;
 
 [ApiController]
-[Route("selections")]
+[Route("selection")]
 public class FilmSelectionController : ControllerBase
 {
     readonly FilmSelectionRepository _selectionRepo;
@@ -84,7 +84,7 @@ public class FilmSelectionController : ControllerBase
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
     /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpPut("films/{selectionId}/")]
+    [HttpPut("films/{selectionId}/{filmId}")]
     public async Task<IActionResult> AddFilm(string filmId, string selectionId, CancellationToken token)
     {
         var isSuccess = await _selectionRepo.AddFilm(selectionId, filmId);
@@ -103,7 +103,7 @@ public class FilmSelectionController : ControllerBase
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
     /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpDelete("films/{selectionId}/{filmdId}")]
+    [HttpPut("films/delete/{selectionId}/{filmdId}")]
     public async Task<IActionResult> DeleteFilm(string filmdId, string selectionId)
     {
         var isSuccess = await _selectionRepo.DeleteFilm(selectionId, filmdId);

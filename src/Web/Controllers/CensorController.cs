@@ -104,7 +104,7 @@ public class CensorController : ControllerBase
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
     /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpDelete("films/{censorId}/{filmdId}")]
+    [HttpPut("films/delete/{censorId}/{filmdId}")]
     public async Task<IActionResult> DeleteFilm(string filmdId, string censorId)
     {
         var isSuccess = await _censorRepo.DeleteFilm(censorId, filmdId);
