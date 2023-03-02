@@ -26,7 +26,7 @@ public class FilmServiceGrpc : FilmServiceProto.FilmServiceProtoBase
     }
     public override async Task<IsSuccessResponse> DecrWillWatchCount(FilmIdRequest request, Grpc.Core.ServerCallContext context)
     {
-        var res = await _interactor.DecrWatchedCount(request.FilmdId, context.CancellationToken);
+        var res = await _interactor.DecrWillWatchCount(request.FilmdId, context.CancellationToken);
 
         return new IsSuccessResponse { Success = res };
     }
@@ -60,7 +60,7 @@ public class FilmServiceGrpc : FilmServiceProto.FilmServiceProtoBase
 
     public override async Task<IsSuccessResponse> IncrWillWatchCount(FilmIdRequest request, Grpc.Core.ServerCallContext context)
     {
-        var res = await _interactor.IncrWatchedCount(request.FilmdId, context.CancellationToken);
+        var res = await _interactor.IncrWillWatchCount(request.FilmdId, context.CancellationToken);
 
         return new IsSuccessResponse { Success = res };
     }

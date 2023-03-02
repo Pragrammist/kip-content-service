@@ -51,13 +51,11 @@ public class WebFixture : WebApplicationFactory<Program>, IDisposable
 
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
-        builder
-        .UseEnvironment("Test")
-        .ConfigureServices(services =>
-                {
-                    services
-                        .AddGrpcClient<FilmServiceProtoClient>(options => options.Address = new Uri(CLIENT_CONNECTION_TO_GRPC_CHANEL))
-                        .ConfigurePrimaryHttpMessageHandler(() => this.Server.CreateHandler());
-                });
+        builder.UseEnvironment("Test").ConfigureServices(services =>
+        {
+            services
+                .AddGrpcClient<FilmServiceProtoClient>(options => options.Address = new Uri(CLIENT_CONNECTION_TO_GRPC_CHANEL))
+                .ConfigurePrimaryHttpMessageHandler(() => this.Server.CreateHandler());
+        });
     }
 }
