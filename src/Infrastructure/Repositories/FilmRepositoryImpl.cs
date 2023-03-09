@@ -1,3 +1,4 @@
+using System.Security.Cryptography.X509Certificates;
 using Core;
 using Core.Dtos;
 using Core.Repositories;
@@ -33,12 +34,59 @@ public class FilmRepositoryImpl : FilmRepository
 
     public async Task<FilmDto> Create(CreateFilmDto film, CancellationToken token = default) 
     {
+        await CheckLists(film);
         var filmToInsert = film.Adapt<Film>();
         await _filmsCol.InsertOneAsync(filmToInsert);
         return filmToInsert.Adapt<FilmDto>();
     }
-        
-        
+    async Task CheckLists(CreateFilmDto film)
+    {
+        var message = "";
+        var personCheck = await CheckPersons(film);
+
+        if(personCheck is not null)
+            message += personCheck + "\n";
+
+        var filmCheck = await CheckFilms(film);
+
+        if(filmCheck is not null)
+            message += filmCheck + "\n";
+
+        if(filmCheck is not null || personCheck is not null)
+            throw new FilmNotValidException(message);
+
+    }
+    
+    async Task<string?> CheckPersons(CreateFilmDto film)
+    {
+        var notValidIds = new List<string>();
+        foreach(var personId in film.Stuff)
+        {
+            var persons = await _personsCol.FindAsync(filter: PersonFilterId(personId));
+            var person = await persons.FirstOrDefaultAsync();
+            if(person is null)
+                notValidIds.Add(personId);                
+        }
+        return notValidIds.Count > 0 ? PersonNotValidIdMessage(notValidIds) : null;
+    }
+
+    async Task<string?> CheckFilms(CreateFilmDto film)
+    {
+        var notValidIds = new List<string>();
+        foreach(var filmId in film.RelatedFilms)
+        {
+            var films = await _filmsCol.FindAsync(filter: FilterById(filmId));
+            var relatedFilm = await films.FirstOrDefaultAsync();
+            if(relatedFilm is null)
+                notValidIds.Add(filmId);                
+        }
+        return notValidIds.Count > 0 ? PersonNotValidIdMessage(notValidIds) : null;
+    }
+    string PersonNotValidIdMessage(List<string> notValidIds)
+    {
+        var aggIds = notValidIds.Aggregate(((id1, id2) => $"{id1}, {id2}"));
+        return $"Person ids {aggIds} not valid";
+    }
 
     public async Task<IEnumerable<FilmDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default) =>
         (await _filmsCol.FindAsync(

@@ -1,8 +1,15 @@
 namespace Core;
 
-public class FilmsAlreadyExistsException : Exception
+public class AppException : Exception
 {
-    public FilmsAlreadyExistsException(object film, object place) : base($"Film({film}) arlready exists in {place}"){
+    public AppException(){}
+    public AppException(string message) {}
+}
+
+
+public class FilmNotValidException : AppException
+{
+    public FilmNotValidException(object film, string? message = null) : base($"Film({film}) arlready exists in { message ?? "film is not valid" }"){
 
     }
 }
