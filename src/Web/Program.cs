@@ -39,6 +39,7 @@ public class Program
 
             builder.Services.AddControllers();
             builder.Services.AddGrpc();
+            builder.Services.AddCors();
 
             builder.Services.AddMongoDb(mongoConnection, dbName)
                             .AddCensorMongoDbCollection(censorsCollection)
@@ -76,7 +77,7 @@ public class Program
                 options.RoutePrefix = string.Empty;
             });
 
-            app.UseAuthorization();
+            app.UseCors(builder => builder.AllowAnyOrigin());
 
             app.MapMetrics();
             app.MapControllers();

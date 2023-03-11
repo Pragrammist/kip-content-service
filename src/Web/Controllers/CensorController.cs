@@ -40,8 +40,10 @@ public class CensorController : ControllerBase
     [HttpGet("/censors/{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
-        var censor = await _censorRepo.Get(limit, page, token);
-        return new ObjectResult(censor);
+         var censors = await _censorRepo.Get(limit, page, token);
+        Response.Headers.Add("X-Total-Count", censors.Count().ToString());
+        Response.Headers.Add("Access-Control-Expose-Headers", "X-Total-Count");
+        return new ObjectResult(censors);
     }
 
     /// <summary>
