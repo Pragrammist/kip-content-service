@@ -40,7 +40,7 @@ public class PersonController : ControllerBase
     [HttpGet("/persons/{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
-        var persons = await _personRepo.Get(limit, page, token);
+        var persons = (await _personRepo.Get(limit, page, token)).ToArray();
         Response.Headers.Add("X-Total-Count", persons.Count().ToString());
         Response.Headers.Add("Access-Control-Expose-Headers", "X-Total-Count");
         return new ObjectResult(persons);

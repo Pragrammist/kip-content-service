@@ -39,7 +39,7 @@ public class FilmSelectionController : ControllerBase
     [HttpGet("/selections/{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
-        var selections = await _selectionRepo.Get(limit, page, token);
+        var selections = (await _selectionRepo.Get(limit, page, token)).ToArray();
         Response.Headers.Add("X-Total-Count", selections.Count().ToString());
         Response.Headers.Add("Access-Control-Expose-Headers", "X-Total-Count");
         return new ObjectResult(selections);
