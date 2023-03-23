@@ -67,7 +67,33 @@ public class FilmRepositoryImpl : FilmRepository
             if(person is null)
                 notValidIds.Add(personId);                
         }
-        return notValidIds.Count > 0 ? PersonNotValidIdMessage(notValidIds) : null;
+        return notValidIds.Count > 0 ? NotValidIdsMessage(notValidIds) : null;
+    }
+
+    async Task<string?> CheckPersons(List<string> inpPersons)
+    {
+        var notValidIds = new List<string>();
+        foreach(var personId in inpPersons)
+        {
+            var persons = await _personsCol.FindAsync(filter: PersonFilterId(personId));
+            var person = await persons.FirstOrDefaultAsync();
+            if(person is null)
+                notValidIds.Add(personId);                
+        }
+        return notValidIds.Count > 0 ? NotValidIdsMessage(notValidIds) : null;
+    }
+
+    async Task<string?> CheckFilms(List<string> inpFilms)
+    {
+        var notValidIds = new List<string>();
+        foreach(var filmId in inpFilms)
+        {
+            var films = await _filmsCol.FindAsync(filter: FilterById(filmId));
+            var relatedFilm = await films.FirstOrDefaultAsync();
+            if(relatedFilm is null)
+                notValidIds.Add(filmId);                
+        }
+        return notValidIds.Count > 0 ? NotValidIdsMessage(notValidIds) : null;
     }
 
     async Task<string?> CheckFilms(CreateFilmDto film)
@@ -80,9 +106,9 @@ public class FilmRepositoryImpl : FilmRepository
             if(relatedFilm is null)
                 notValidIds.Add(filmId);                
         }
-        return notValidIds.Count > 0 ? PersonNotValidIdMessage(notValidIds) : null;
+        return notValidIds.Count > 0 ? NotValidIdsMessage(notValidIds) : null;
     }
-    string PersonNotValidIdMessage(List<string> notValidIds)
+    string NotValidIdsMessage(List<string> notValidIds)
     {
         var aggIds = notValidIds.Aggregate(((id1, id2) => $"{id1}, {id2}"));
         return $"Person ids {aggIds} not valid";
@@ -111,12 +137,12 @@ public class FilmRepositoryImpl : FilmRepository
     public async Task<bool> UpdateData(string id, UpdateFilmDto film, CancellationToken token = default) =>
         (await _filmsCol.UpdateOneAsync(
             filter: FilterById(id),
-            update: BuildUpdateDefition(film),
+            update: await BuildUpdateDefition(film),
             cancellationToken: token
         )).ModifiedCount > 0;
     
 
-    UpdateDefinition<Film> BuildUpdateDefition(UpdateFilmDto film)
+    async Task<UpdateDefinition<Film>> BuildUpdateDefition(UpdateFilmDto film)
     {
         var updList = new List<UpdateDefinition<Film>>();
         
@@ -161,6 +187,50 @@ public class FilmRepositoryImpl : FilmRepository
         if(film.Fees is not null)
             updList.Add(Builders<Film>.Update.Set(f => f.Fees, film.Fees));
         
+        if(film.Images is not null)
+            updList.Add(Builders<Film>.Update.Set(f => f.Images, film.Images));
+
+        if(film.Persons is not null)
+        {
+            var checkRes = await CheckPersons(film.Persons);
+
+            if(checkRes is not null)
+                throw new InvalidOperationException(checkRes);
+            
+            updList.Add(Builders<Film>.Update.Set(f => f.Stuff, film.Persons));
+            
+        }
+
+        if(film.RelatedFilms is not null)
+        {
+            var checkRes = await CheckFilms(film.RelatedFilms);
+            
+            if(checkRes is not null)
+                throw new InvalidOperationException(checkRes);
+            
+            updList.Add(Builders<Film>.Update.Set(f => f.RelatedFilms, film.RelatedFilms));
+            
+        }
+
+        if(film.Articles is not null)
+            updList.Add(Builders<Film>.Update.Set(f => f.Articles, film.Articles));
+        
+
+        if(film.Trailers is not null)
+            updList.Add(Builders<Film>.Update.Set(f => f.Trailers, film.Trailers));
+
+
+        if(film.Tizers is not null)
+            updList.Add(Builders<Film>.Update.Set(f => f.Tizers, film.Tizers));
+
+
+        if(film.Nominations is not null)
+            updList.Add(Builders<Film>.Update.Set(f => f.Nominations, film.Nominations));
+
+
+        if(film.Genres is not null)
+            updList.Add(Builders<Film>.Update.Set(f => f.Genres, film.Genres));
+            
         UpdateDefinition<Film> finalUpdate = Builders<Film>.Update.Combine(updList);
         return finalUpdate;
     }

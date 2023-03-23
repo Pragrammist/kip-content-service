@@ -40,7 +40,7 @@ public class CensorController : ControllerBase
     /// <param name="page">номер страницы</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
     /// <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
-    [HttpGet("/{limit?}/{page?}")]
+    [HttpGet("{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
          var censors = (await _censorRepo.Get(limit, page, token)).ToArray();

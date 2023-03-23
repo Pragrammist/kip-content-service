@@ -6,7 +6,7 @@ using Core.Dtos.UpdatePersonDtos;
 namespace Web.Controllers;
 
 [ApiController]
-[Route("person")]
+[Route("persons")]
 public class PersonController : ControllerBase
 {
     PersonRepository _personRepo;
@@ -37,7 +37,7 @@ public class PersonController : ControllerBase
     /// <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
     /// <param name="page">номер страницы</param>
     /// <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
-    [HttpGet("/persons/{limit?}/{page?}")]
+    [HttpGet("{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
         var persons = (await _personRepo.Get(limit, page, token)).ToArray();

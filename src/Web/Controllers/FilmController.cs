@@ -8,7 +8,7 @@ using Core.Dtos.UpdateSeasonsDtos;
 namespace Web.Controllers;
 
 [ApiController]
-[Route("film")]
+[Route("films")]
 public class FilmController : ControllerBase
 {
     readonly FilmRepository _filmRepository;
@@ -44,7 +44,7 @@ public class FilmController : ControllerBase
     /// <param name="page">номер страницы</param>
     /// <param name="token">токен для отмены запроса. Создается автоматически. Не обращать на него внимание</param>
     /// <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
-    [HttpGet("/films/{limit?}/{page?}")]
+    [HttpGet("{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
         var films = (await _filmRepository.Get(limit, page)).ToArray();
