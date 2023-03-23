@@ -16,4 +16,6 @@ public class UpdatePersonDto
     public string? Career { get; set; } 
 
     public string? BirthPlace { get; set; } 
+
+    public List<string>? Nominations { get; set; }
 }

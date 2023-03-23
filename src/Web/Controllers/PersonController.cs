@@ -88,7 +88,7 @@ public class PersonController : ControllerBase
     /// Меняет некоторую информацию персоны
     /// </summary>
     /// <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
-    /// <param name="personId">адйи персоны</param>
+    /// <param name="id">адйи персоны</param>
     /// <param name="personDataDto">Данные чтобы обновить</param>
     /// <remarks>
     /// Прмер запроса:
@@ -101,42 +101,12 @@ public class PersonController : ControllerBase
     /// </remarks>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
-    [HttpPut("{personId}")]
-    public async Task<IActionResult> ChangeInfo(string personId, UpdatePersonDto personDataDto, CancellationToken token)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Edit(string id, UpdatePersonDto personDataDto, CancellationToken token)
     {
-        var person = await _personRepo.UpdateData(personId, personDataDto, token);
+        var person = await _personRepo.UpdateData(id, personDataDto, token);
         return new ObjectResult(person);
     }
 
-    /// <summary>
-    /// Добавляет номинацию для персоны
-    /// </summary>
-    /// <param name="personId">айди персоны</param>
-    /// <param name="nomination">номинация</param>
-    /// <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="400">Не прошло валидацию</response>
-    /// <response code="404">Не нашел персону</response>
-    [HttpPut("nominations/{personId}/{nomination}")]
-    public async Task<IActionResult> AddNomination(string personId, string nomination, CancellationToken token)
-    {
-        var iSsuccess = await _personRepo.AddNomination(personId, nomination, token);
-        return iSsuccess ? Ok() : BadRequest();
-    }
-
-    /// <summary>
-    /// Убирает номинацию у персоны
-    /// </summary>
-    /// <param name="personId">айди персоны</param>
-    /// <param name="nomination">номинация</param>
-    /// <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="400">Не прошло валидацию</response>
-    /// <response code="404">Не нашел персону</response>
-    [HttpPut("nominations/delete/{personId}/{nomination}")]
-    public async Task<IActionResult> DeleteNomination(string personId, string nomination, CancellationToken token)
-    {
-        var iSsuccess = await _personRepo.DeleteNomination(personId, nomination, token);
-        return iSsuccess ? Ok() : BadRequest();
-    }
+    
 }

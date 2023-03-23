@@ -120,6 +120,9 @@ public class PersonRepositoryImpl : PersonRepository
 
         if(dataToUpdate.BirthPlace is not null)
             updList.Add(Builders<Person>.Update.Set(per => per.BirthPlace, dataToUpdate.BirthPlace));
+        
+        if(dataToUpdate.Nominations is not null)
+            updList.Add(Builders<Person>.Update.Set(p => p.Nominations, dataToUpdate.Nominations));
 
         UpdateDefinition<Person> finalUpdate = Builders<Person>.Update.Combine(updList);
 
