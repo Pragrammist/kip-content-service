@@ -96,6 +96,25 @@ public class FilmSelectionRepositoryImpl : FilmSelectionRepository
 
         return filmIsAdded;
     }
-        
+    
+    public async Task<bool> SetFilms(string id, List<string> films, CancellationToken token)
+    {
+        foreach(var film in films)
+        {
+            var isFound = (await _filmsCol.FindAsync(
+                filter: Builders<Film>.Filter.Eq(f => f.Id, film),
+                cancellationToken: token
+            )).FirstOrDefault() is not null;
+            if(!isFound)
+                return false;
+        }
 
+        return (await _filmSelectionCol.UpdateOneAsync(
+            filter: FilterById(id),
+            update: Builders<FilmSelection>.Update.Set(selection => selection.Films, films),
+            cancellationToken: token
+        )).ModifiedCount > 0;
+    }
+
+    
 }

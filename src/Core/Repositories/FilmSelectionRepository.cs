@@ -17,4 +17,6 @@ public interface FilmSelectionRepository
     Task<bool> AddFilm(string id, string filmId, CancellationToken token = default);
 
     Task<bool> DeleteFilm(string id, string filmId, CancellationToken token = default);
+
+    Task<bool> SetFilms(string id, List<string> films, CancellationToken token);
 }
