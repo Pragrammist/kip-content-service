@@ -10,7 +10,7 @@ public interface FilmRepository
 {
     Task<FilmDto> Create(CreateFilmDto film, CancellationToken token = default);
 
-    Task<IEnumerable<FilmDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default);
+    Task<IEnumerable<FilmDto>> Get(int limit, int skip, CancellationToken token = default);
 
     Task<FilmDto?> Get(string id, CancellationToken token = default);
 

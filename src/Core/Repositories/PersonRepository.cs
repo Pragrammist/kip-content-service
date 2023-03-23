@@ -12,7 +12,7 @@ public interface PersonRepository
     Task<PersonDto?> Get(string id, CancellationToken token = default);
 
 
-    Task<IEnumerable<PersonDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default);
+    Task<IEnumerable<PersonDto>> Get(int limit, int skip, CancellationToken token = default);
 
 
     Task<bool> Delete(string id, CancellationToken token = default);

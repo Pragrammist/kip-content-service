@@ -58,13 +58,13 @@ public class FilmSelectionRepositoryImpl : FilmSelectionRepository
             cancellationToken: token)).DeletedCount > 0;
     
 
-    public async Task<IEnumerable<FilmSelectionDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default) =>
+    public async Task<IEnumerable<FilmSelectionDto>> Get(int limit, int skip, CancellationToken token = default) =>
         (await _filmSelectionCol.FindAsync(
             filter: Builders<FilmSelection>.Filter.Empty,
             options: new FindOptions<FilmSelection> // here is projection from Censor to CensorDto
                 { 
-                    Limit = ((int)limit), 
-                    Skip = (int)((page - 1) * limit) 
+                    Limit = limit, 
+                    Skip = skip 
                 },
             cancellationToken: token
         )).ToEnumerable().Adapt<IEnumerable<FilmSelectionDto>>();

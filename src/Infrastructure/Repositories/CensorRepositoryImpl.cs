@@ -58,13 +58,13 @@ public class CensorRepositoryImpl : CensorRepository
             cancellationToken: token)).DeletedCount > 0;
     
 
-    public async Task<IEnumerable<CensorDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default) =>
+    public async Task<IEnumerable<CensorDto>> Get(int limit, int skip, CancellationToken token = default) =>
         (await _censorMongoRepo.FindAsync(
             filter: Builders<Censor>.Filter.Empty,
             options: new FindOptions<Censor> // here is projection from Censor to CensorDto
                 { 
-                    Limit = ((int)limit), 
-                    Skip = (int)((page - 1) * limit) 
+                    Limit = limit, 
+                    Skip = skip 
                 },
             cancellationToken: token
         )).ToEnumerable().Adapt<IEnumerable<CensorDto>>();

@@ -35,12 +35,12 @@ public class PersonController : ControllerBase
     /// </summary>
     /// <param name="limit">максимальное количество возвращаемых элементов</param>
     /// <param name="token">токен, чтобы отменить запрос. Сам пердается, не обрщать на него внимание</param>
-    /// <param name="page">номер страницы</param>
+    /// <param name="skip">сколько пропутстить</param>
     /// <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
-    [HttpGet("{limit?}/{page?}")]
-    public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
+    [HttpGet]
+    public async Task<IActionResult> Get(CancellationToken token, [FromQuery(Name = "_end")]int limit = 10, [FromQuery(Name = "_start")]int skip = 0)
     {
-        var persons = (await _personRepo.Get(limit, page, token)).ToArray();
+        var persons = (await _personRepo.Get(limit, skip, token)).ToArray();
         Response.Headers.Add("X-Total-Count", persons.Count().ToString());
         Response.Headers.Add("Access-Control-Expose-Headers", "X-Total-Count");
         return new ObjectResult(persons);

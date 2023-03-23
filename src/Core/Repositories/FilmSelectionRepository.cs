@@ -6,7 +6,7 @@ public interface FilmSelectionRepository
 {
     Task<FilmSelectionDto?> Create(string name, CancellationToken token = default, List<string>? films = null);
 
-    Task<IEnumerable<FilmSelectionDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default);
+    Task<IEnumerable<FilmSelectionDto>> Get(int limit, int skip, CancellationToken token = default);
 
     Task<FilmSelectionDto?> Get(string id, CancellationToken token = default);
 

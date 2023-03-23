@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Security.Cryptography.X509Certificates;
 using Core;
 using Core.Dtos;
@@ -114,12 +115,12 @@ public class FilmRepositoryImpl : FilmRepository
         return $"Person ids {aggIds} not valid";
     }
 
-    public async Task<IEnumerable<FilmDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default) =>
+    public async Task<IEnumerable<FilmDto>> Get(int limit, int skip, CancellationToken token = default) =>
         (await _filmsCol.FindAsync(
             filter: Builders<Film>.Filter.Empty,
             options: new FindOptions<Film>{
-                Limit = (int)limit,
-                Skip = (int)(limit * (page - 1))
+                Limit = limit,
+                Skip = skip
             },
             cancellationToken: token
         ))

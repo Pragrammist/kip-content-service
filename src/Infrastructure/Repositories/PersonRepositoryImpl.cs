@@ -75,13 +75,13 @@ public class PersonRepositoryImpl : PersonRepository
         .FirstOrDefault() 
         .Adapt<PersonDto>();
 
-    public async Task<IEnumerable<PersonDto>> Get(uint limit = 20, uint page = 1, CancellationToken token = default)=>
+    public async Task<IEnumerable<PersonDto>> Get(int limit, int skip, CancellationToken token = default)=>
         (await _personMongoRepo.FindAsync(
             filter:Builders<Person>.Filter.Empty,
             options: new FindOptions<Person>
             {
-                Limit = (int)limit,
-                Skip = (int)(limit * (page - 1))
+                Limit = limit,
+                Skip = skip
             },
             cancellationToken: token
         ))
