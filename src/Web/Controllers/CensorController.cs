@@ -14,6 +14,7 @@ public class CensorController : ControllerBase
     {
         _censorRepo = censorRepo;
     }
+
     /// <summary>
     /// Возвращает нензора по айди
     /// </summary>
@@ -31,6 +32,7 @@ public class CensorController : ControllerBase
 
         return new ObjectResult(censor);
     }
+
     /// <summary>
     /// Возвращает коллекцию цензоров
     /// </summary>
@@ -64,6 +66,7 @@ public class CensorController : ControllerBase
         else
             return BadRequest();
     }
+
     /// <summary>
     /// Создает цензора
     /// </summary>
@@ -79,56 +82,42 @@ public class CensorController : ControllerBase
     }
 
     /// <summary>
-    /// Обновляет весь список топа фильмов цензора
+    /// Меняет данные у фильма
     /// </summary>
-    /// <param name="censorId">айди цензора</param>
-    /// <param name="films">фильмы цензора. Располагать в порядке их топа. Передавать id фильмов, НЕ НАЗВАНИЯ</param>
+    /// <param name="censorEditModel">модель редактирования</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
-    /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpPut("films/{censorId}/")]
-    public async Task<IActionResult> SetFilmsTop(List<string> films, string censorId, CancellationToken token)
+    [HttpPut]
+    public async Task<IActionResult> Edit([FromBody] EditCensorModel censorEditModel, CancellationToken token)
     {
-        var isSuccess = await _censorRepo.SetFilmsTop(censorId, films);
+        var isSuccess = true;
+        if(censorEditModel.Name is not null)
+            isSuccess = await _censorRepo.ChangeName(censorEditModel.Name, censorEditModel.Id);
+        
+        if(censorEditModel.Films is not null)
+            isSuccess = await _censorRepo.SetFilmsTop(censorEditModel.Id, censorEditModel.Films);
 
         if(isSuccess)
             return Ok();
         else
-            return BadRequest();
+            return BadRequest("Что не поменялось");
     }
+
+    
 
     /// <summary>
     /// Убирает фильзм у цензора
     /// </summary>
-    /// <param name="censorId">айди цензора</param>
-    /// <param name="filmdId">айди фильма</param>
+    /// <param name="delModel">модель с данными для удаление</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
     /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpPut("films/delete/{censorId}/{filmdId}")]
-    public async Task<IActionResult> DeleteFilm(string filmdId, string censorId)
+    [HttpPut("films/delete/")]
+    public async Task<IActionResult> DeleteFilm(DeleteFilmFromCensorModel delModel)
     {
-        var isSuccess = await _censorRepo.DeleteFilm(censorId, filmdId);
+        var isSuccess = await _censorRepo.DeleteFilm(delModel.CensorId, delModel.FilmdId);
 
-        if(isSuccess)
-            return Ok();
-        else
-            return BadRequest();
-    }
-
-    /// <summary>
-    /// Меняет имя цензора
-    /// </summary>
-    /// <param name="censorId">айди цензора</param>
-    /// <param name="name">новое имя</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Не нашел цензора</response>
-    [HttpPut("name/{censorId}/{name}")]
-    public async Task<IActionResult> ChangeName(string censorId, string name)
-    {
-        var isSuccess = await _censorRepo.ChangeName(censorId, name);
-        
         if(isSuccess)
             return Ok();
         else

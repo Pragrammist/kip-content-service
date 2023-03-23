@@ -3,6 +3,7 @@ namespace Web.Models;
 
 
 public record CreateCensorModel(string Name, List<string>? Films);
-// {
-//     string name, CancellationToken token, List<string>? films = null
-// }
+
+public record EditCensorModel(string? Name, List<string>? Films, string Id);
+
+public record DeleteFilmFromCensorModel(string FilmdId, string CensorId);
