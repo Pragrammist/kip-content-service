@@ -5,7 +5,7 @@ using Web.Models;
 namespace Web.Controllers;
 
 [ApiController]
-[Route("selection")]
+[Route("selections")]
 public class FilmSelectionController : ControllerBase
 {
     readonly FilmSelectionRepository _selectionRepo;
@@ -37,7 +37,7 @@ public class FilmSelectionController : ControllerBase
     /// <param name="page">номер страницы</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
     /// <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
-    [HttpGet("/selections/{limit?}/{page?}")]
+    [HttpGet("{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
         var selections = (await _selectionRepo.Get(limit, page, token)).ToArray();
@@ -102,60 +102,6 @@ public class FilmSelectionController : ControllerBase
         return  new ObjectResult(censor);
     }
 
-    /// <summary>
-    /// Обновляет весь список топа фильмов цензора
-    /// </summary>
-    /// <param name="selectionId">айди подборок</param>
-    /// <param name="filmId">Айди фильма</param>
-    /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="400">Не прошло валидацию</response>
-    /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpPut("films/{selectionId}/{filmId}")]
-    public async Task<IActionResult> AddFilm(string filmId, string selectionId, CancellationToken token)
-    {
-        var isSuccess = await _selectionRepo.AddFilm(selectionId, filmId);
+    
 
-        if(isSuccess)
-            return Ok();
-        else
-            return BadRequest();
-    }
-
-    /// <summary>
-    /// Убирает фильзм у цензора
-    /// </summary>
-    /// <param name="selectionId">айди подборок</param>
-    /// <param name="filmdId">айди фильма</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="400">Не прошло валидацию</response>
-    /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpPut("films/delete/{selectionId}/{filmdId}")]
-    public async Task<IActionResult> DeleteFilm(string filmdId, string selectionId)
-    {
-        var isSuccess = await _selectionRepo.DeleteFilm(selectionId, filmdId);
-
-        if(isSuccess)
-            return Ok();
-        else
-            return BadRequest();
-    }
-
-    /// <summary>
-    /// Меняет имя цензора
-    /// </summary>
-    /// <param name="selectionId">айди подборок</param>
-    /// <param name="name">новое имя</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="404">Не нашел цензора</response>
-    [HttpPut("name/{selectionId}/{name}")]
-    public async Task<IActionResult> ChangeName(string selectionId, string name)
-    {
-        var isSuccess = await _selectionRepo.ChangeName(selectionId, name);
-        
-        if(isSuccess)
-            return Ok();
-        else
-            return BadRequest();
-    }
 }
