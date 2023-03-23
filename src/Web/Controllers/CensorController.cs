@@ -85,18 +85,19 @@ public class CensorController : ControllerBase
     /// Меняет данные у фильма
     /// </summary>
     /// <param name="censorEditModel">модель редактирования</param>
+    /// <param name="id">айди цензора</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
-    [HttpPut]
-    public async Task<IActionResult> Edit([FromBody] EditCensorModel censorEditModel, CancellationToken token)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Edit(string id, [FromBody]EditCensorModel censorEditModel, CancellationToken token)
     {
         var isSuccess = true;
         if(censorEditModel.Name is not null)
-            isSuccess = await _censorRepo.ChangeName(censorEditModel.Name, censorEditModel.Id);
+            isSuccess = await _censorRepo.ChangeName(censorEditModel.Name, id);
         
         if(censorEditModel.Films is not null)
-            isSuccess = await _censorRepo.SetFilmsTop(censorEditModel.Id, censorEditModel.Films);
+            isSuccess = await _censorRepo.SetFilmsTop(id, censorEditModel.Films);
 
         if(isSuccess)
             return Ok();
@@ -104,23 +105,5 @@ public class CensorController : ControllerBase
             return BadRequest("Что не поменялось");
     }
 
-    
 
-    /// <summary>
-    /// Убирает фильзм у цензора
-    /// </summary>
-    /// <param name="delModel">модель с данными для удаление</param>
-    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
-    /// <response code="400">Не прошло валидацию</response>
-    /// <response code="404">Не нашел фильм или цензора</response>
-    [HttpPut("films/delete/")]
-    public async Task<IActionResult> DeleteFilm(DeleteFilmFromCensorModel delModel)
-    {
-        var isSuccess = await _censorRepo.DeleteFilm(delModel.CensorId, delModel.FilmdId);
-
-        if(isSuccess)
-            return Ok();
-        else
-            return BadRequest();
-    }
 }

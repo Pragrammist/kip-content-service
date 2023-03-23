@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Core.Repositories;
+using Web.Models;
 
 namespace Web.Controllers;
 
@@ -46,6 +47,31 @@ public class FilmSelectionController : ControllerBase
     }
 
     /// <summary>
+    /// Меняет имя цензора
+    /// </summary>
+    /// <param name="editModel">модель если поменять модели</param>
+    /// <param name="id">модель если поменять модели</param>
+    /// <param name="token">токен для сброса</param>
+    /// <response code="200">Все хорошо. Операция была произведена успешно</response>
+    /// <response code="404">Не нашел цензора</response>
+    [HttpPut("{id}")]
+    public async Task<IActionResult> EditSelection(string id, EditSelectionModel editModel, CancellationToken token)
+    {
+        var isSuccess = true; 
+        
+        if(editModel.Name is not null)
+            isSuccess = await _selectionRepo.ChangeName(id, editModel.Name);
+
+        if(editModel.Films is not null)
+            isSuccess = await _selectionRepo.SetFilms(id, editModel.Films, token);
+        
+        if(isSuccess)
+            return Ok();
+        else
+            return BadRequest();
+    }
+
+    /// <summary>
     /// Удаляет цензора по айди
     /// </summary>
     /// <param name="selectionId">айди подборок</param>
@@ -63,17 +89,16 @@ public class FilmSelectionController : ControllerBase
             return BadRequest();
     }
     /// <summary>
-    /// Создает цензора
+    /// Создает подборку
     /// </summary>
-    /// <param name="name">имя цензора</param>
+    /// <param name="selectionModel">модель подборки</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
-    /// <param name="films">фильмы, которые есть у цензора. При передаче нужно расположить фильмы в порядке топа самого цензора. Передавать id фильмов, НЕ НАЗВАНИЯ</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
-    [HttpPost("{name}")]
-    public async Task<IActionResult> Create(string name, CancellationToken token, List<string>? films = null)
+    [HttpPost]
+    public async Task<IActionResult> Create(CreateSelectionModel selectionModel, CancellationToken token)
     {
-        var censor = await _selectionRepo.Create(name, token, films);
+        var censor = await _selectionRepo.Create(selectionModel.Name, token, selectionModel.Films);
         return  new ObjectResult(censor);
     }
 
