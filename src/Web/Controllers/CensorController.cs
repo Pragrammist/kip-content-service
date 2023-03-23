@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Core.Repositories;
+using Web.Models;
 
 namespace Web.Controllers;
 
 [ApiController]
-[Route("censor")]
+[Route("censors")]
 public class CensorController : ControllerBase
 {
 
@@ -37,7 +38,7 @@ public class CensorController : ControllerBase
     /// <param name="page">номер страницы</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
     /// <response code="200">Дает коллекцию цензоров. Коллекция может бы быть пустая</response>
-    [HttpGet("/censors/{limit?}/{page?}")]
+    [HttpGet("/{limit?}/{page?}")]
     public async Task<IActionResult> Get(CancellationToken token, uint limit = 20, uint page = 1)
     {
          var censors = (await _censorRepo.Get(limit, page, token)).ToArray();
@@ -66,15 +67,14 @@ public class CensorController : ControllerBase
     /// <summary>
     /// Создает цензора
     /// </summary>
-    /// <param name="name">имя цензора</param>
+    /// <param name="censorModel">модель цезора при создании</param>
     /// <param name="token">токен для отмены запроса. Его не нужно передавать, он сам передается</param>
-    /// <param name="films">фильмы, которые есть у цензора. При передаче нужно расположить фильмы в порядке топа самого цензора. Передавать id фильмов, НЕ НАЗВАНИЯ</param>
     /// <response code="200">Все хорошо. Операция была произведена успешно</response>
     /// <response code="400">Не прошло валидацию</response>
-    [HttpPost("{name}")]
-    public async Task<IActionResult> Create(string name, CancellationToken token, List<string>? films = null)
+    [HttpPost]
+    public async Task<IActionResult> Create([FromBody]CreateCensorModel censorModel, CancellationToken token)
     {
-        var censor = await _censorRepo.Create(name, token, films);
+        var censor = await _censorRepo.Create(censorModel.Name, token, censorModel.Films);
         return  new ObjectResult(censor);
     }
 
